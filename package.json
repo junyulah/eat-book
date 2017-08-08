@@ -1,0 +1,35 @@
+{
+  "name": "eat-book",
+  "version": "0.0.1",
+  "description": "An approach to help you read a book.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test/function/**/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LoveKino/eat-book.git"
+  },
+  "keywords": [
+    "approach",
+    "read",
+    "book"
+  ],
+  "author": "ddchen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/LoveKino/eat-book/issues"
+  },
+  "homepage": "https://github.com/LoveKino/eat-book#readme",
+  "devDependencies": {
+    "mocha": "^3.5.0",
+    "quick-steady-theme": "0.0.2",
+    "webpack": "^3.4.1"
+  },
+  "dependencies": {
+    "kabanery": "^0.2.4",
+    "kabanery-modal": "0.0.9",
+    "plain-tree-compiler": "0.0.1",
+    "tree-coordinate": "0.0.1"
+  }
+}
