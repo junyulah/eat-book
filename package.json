@@ -29,7 +29,7 @@
   "dependencies": {
     "kabanery": "^0.2.4",
     "kabanery-modal": "0.0.9",
-    "plain-tree-compiler": "0.0.1",
+    "plain-tree-compiler": "^0.1.0",
     "tree-coordinate": "0.0.1"
   }
 }

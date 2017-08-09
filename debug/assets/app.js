@@ -60,11 +60,102 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 9);
+/******/ 	return __webpack_require__(__webpack_require__.s = 11);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = __webpack_require__(12);
+
+/**
+ * @readme-quick-run
+ *
+ * Using method n to construct dom node quickly.
+ *
+ * [readme-lang:zh]用方法n快速构造dom节点
+ *
+ * ## test tar=js r_c=kabanery env=browser
+ * let {n, mount} = kabanery;
+ *
+ * mount(n('div', {
+ *   id: 'qu',
+ *   style: {
+ *      backgroundColor: 'red'
+ *   }
+ * }, [
+ *      n('span class=go style="font-size:16px"')
+ * ]), document.body);
+ *
+ * console.log(document.getElementById('qu').outerHTML); // print result
+ */
+
+/**
+ * @readme-quick-run
+ *
+ * Basic way to construct a view.
+ *
+ * [readme-lang:zh]构造一个组件的简单方法
+ *
+ * ## test tar=js r_c=kabanery env=browser
+ * let {view, n, mount} = kabanery;
+ *
+ * let MyView = view((data) => {
+ *      let {type} = data;
+ *
+ *      return n('div', {
+ *         id: 'test1',
+ *         style: {
+ *            fontSize: 10
+ *         }
+ *      },[
+ *          type === 2 && n('span', 'second'),
+ *          type === 3 && n('div', 'third')
+ *      ]);
+ * });
+ *
+ * mount(MyView({type: 3}), document.body);
+ *
+ * console.log(document.getElementById('test1').outerHTML); // print result
+ */
+
+/**
+ * @readme-quick-run
+ *
+ * Using update api to update a view.
+ *
+ * [readme-lang:zh]运用update api去更新一个view
+ *
+ * ## test tar=js r_c=kabanery env=browser
+ * let {view, n, mount} = kabanery;
+ *
+ * let MyView = view((data, {update}) => {
+ *      return n('div', {
+ *         id: 'a',
+ *         style: {
+ *            fontSize: 10
+ *         },
+ *         onclick: () => {
+ *            update('show', !data.show);
+ *         }
+ *      }, [
+ *          data.show && n('div', 'show text')
+ *      ]);
+ * });
+ *
+ * mount(MyView({show: false}), document.body);
+ *
+ * document.getElementById('a').click(); // simulate user action
+ * console.log(document.getElementById('a').outerHTML); // print result
+ */
+
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -290,7 +381,7 @@ module.exports = {
 
 
 /***/ }),
-/* 1 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -298,13 +389,13 @@ module.exports = {
 
 let {
     isObject, funType, or, isString, isFalsy, likeArray
-} = __webpack_require__(0);
+} = __webpack_require__(1);
 
 let iterate = __webpack_require__(7);
 
 let {
     map, reduce, find, findIndex, forEach, filter, any, exist, compact
-} = __webpack_require__(11);
+} = __webpack_require__(13);
 
 let contain = (list, item, fopts) => findIndex(list, item, fopts) !== -1;
 
@@ -400,97 +491,6 @@ module.exports = {
 
 
 /***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-module.exports = __webpack_require__(10);
-
-/**
- * @readme-quick-run
- *
- * Using method n to construct dom node quickly.
- *
- * [readme-lang:zh]用方法n快速构造dom节点
- *
- * ## test tar=js r_c=kabanery env=browser
- * let {n, mount} = kabanery;
- *
- * mount(n('div', {
- *   id: 'qu',
- *   style: {
- *      backgroundColor: 'red'
- *   }
- * }, [
- *      n('span class=go style="font-size:16px"')
- * ]), document.body);
- *
- * console.log(document.getElementById('qu').outerHTML); // print result
- */
-
-/**
- * @readme-quick-run
- *
- * Basic way to construct a view.
- *
- * [readme-lang:zh]构造一个组件的简单方法
- *
- * ## test tar=js r_c=kabanery env=browser
- * let {view, n, mount} = kabanery;
- *
- * let MyView = view((data) => {
- *      let {type} = data;
- *
- *      return n('div', {
- *         id: 'test1',
- *         style: {
- *            fontSize: 10
- *         }
- *      },[
- *          type === 2 && n('span', 'second'),
- *          type === 3 && n('div', 'third')
- *      ]);
- * });
- *
- * mount(MyView({type: 3}), document.body);
- *
- * console.log(document.getElementById('test1').outerHTML); // print result
- */
-
-/**
- * @readme-quick-run
- *
- * Using update api to update a view.
- *
- * [readme-lang:zh]运用update api去更新一个view
- *
- * ## test tar=js r_c=kabanery env=browser
- * let {view, n, mount} = kabanery;
- *
- * let MyView = view((data, {update}) => {
- *      return n('div', {
- *         id: 'a',
- *         style: {
- *            fontSize: 10
- *         },
- *         onclick: () => {
- *            update('show', !data.show);
- *         }
- *      }, [
- *          data.show && n('div', 'show text')
- *      ]);
- * });
- *
- * mount(MyView({show: false}), document.body);
- *
- * document.getElementById('a').click(); // simulate user action
- * console.log(document.getElementById('a').outerHTML); // print result
- */
-
-
-/***/ }),
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -499,10 +499,10 @@ module.exports = __webpack_require__(10);
 
 let {
     reduce
-} = __webpack_require__(1);
+} = __webpack_require__(2);
 let {
     funType, isObject, or, isString, isFalsy
-} = __webpack_require__(0);
+} = __webpack_require__(1);
 
 let defineProperty = (obj, key, opts) => {
     if (Object.defineProperty) {
@@ -655,12 +655,12 @@ module.exports = {
 
 let {
     map
-} = __webpack_require__(1);
+} = __webpack_require__(2);
 let {
     isObject, isNode
-} = __webpack_require__(0);
+} = __webpack_require__(1);
 
-let parseArgs = __webpack_require__(12);
+let parseArgs = __webpack_require__(14);
 
 const KABANERY_NODE = 'kabanery_node';
 
@@ -769,7 +769,7 @@ module.exports = {
 
 let {
     createElement, createSvgElement
-} = __webpack_require__(23);
+} = __webpack_require__(25);
 
 let {
     bindEvents
@@ -777,7 +777,7 @@ let {
 
 let {
     map
-} = __webpack_require__(1);
+} = __webpack_require__(2);
 
 let {
     isKabaneryNode
@@ -809,7 +809,7 @@ module.exports = reduceNode;
 "use strict";
 
 
-let EventMatrix = __webpack_require__(24);
+let EventMatrix = __webpack_require__(26);
 
 let {
     listenEventType,
@@ -842,7 +842,7 @@ module.exports = {
 
 let {
     likeArray, isObject, funType, isFunction, isUndefined, or, isNumber, isFalsy, mapType
-} = __webpack_require__(0);
+} = __webpack_require__(1);
 
 /**
  *
@@ -953,11 +953,11 @@ let {
 
 let {
     isNode
-} = __webpack_require__(0);
+} = __webpack_require__(1);
 
 let {
     flat, forEach
-} = __webpack_require__(1);
+} = __webpack_require__(2);
 
 let reduceNode = __webpack_require__(5);
 
@@ -995,13 +995,30 @@ let getDoc = (node) => {
 
 
 let {
-    mount
-} = __webpack_require__(2);
+    view,
+    n
+} = __webpack_require__(0);
 
-let EatBookView = __webpack_require__(26);
-let testData = __webpack_require__(31);
-
-mount(EatBookView(testData), document.body);
+module.exports = view((data) => {
+    return n('textarea', {
+        style: {
+            width: '100%',
+            height: '100%',
+            outline: 'none',
+            resize: 'none',
+            overflow: 'auto',
+            boxSizing: 'border-box',
+            border: '1px solid #999999',
+            borderRadius: 5,
+            fontSize: 16,
+            padding: 5
+        },
+        oninput: (e) => {
+            data.text = e.target.value;
+            data.onchange && data.onchange(data.text);
+        }
+    }, data.text);
+});
 
 
 /***/ }),
@@ -1012,16 +1029,84 @@ mount(EatBookView(testData), document.body);
 
 
 let {
+    n,
+    view
+} = __webpack_require__(0);
+
+module.exports = view(({
+    left,
+    right,
+    leftWidthRate = 0.5,
+    rightWidthRate = 0.5
+}) => {
+    return n('div', {
+        style: {
+            width: '100%',
+            height: '100%'
+        }
+    }, [
+        n('div', {
+            style: {
+                float: 'left',
+                height: '100%',
+                width: `${leftWidthRate * 100}%`,
+                boxSizing: 'border-box'
+            }
+        }, [
+            left
+        ]),
+
+        n('div', {
+            style: {
+                float: 'right',
+                width: `${rightWidthRate * 100}%`,
+                height: '100%',
+                boxSizing: 'border-box'
+            }
+        }, [
+            right
+        ]),
+
+        n('div style="clear:both"')
+    ]);
+});
+
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    mount
+} = __webpack_require__(0);
+
+let EatBookView = __webpack_require__(28);
+let testData = __webpack_require__(43);
+
+mount(EatBookView(testData), document.body);
+
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
     n, svgn, bindPlugs, toHTML, parseArgs, isKabaneryNode, cn
 } = __webpack_require__(4);
 
-let plugs = __webpack_require__(14);
+let plugs = __webpack_require__(16);
 
-let view = __webpack_require__(17);
+let view = __webpack_require__(19);
 
 let mount = __webpack_require__(8);
 
-let N = __webpack_require__(25);
+let N = __webpack_require__(27);
 
 let reduceNode = __webpack_require__(5);
 
@@ -1046,7 +1131,7 @@ module.exports = {
 
 
 /***/ }),
-/* 11 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1151,17 +1236,17 @@ module.exports = {
 
 
 /***/ }),
-/* 12 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-let parseAttribute = __webpack_require__(13);
+let parseAttribute = __webpack_require__(15);
 
 let {
     isString, isObject, isNode, likeArray, isNumber, isBool
-} = __webpack_require__(0);
+} = __webpack_require__(1);
 
 let parseArgs = (args) => {
     let tagName,
@@ -1237,7 +1322,7 @@ module.exports = parseArgs;
 
 
 /***/ }),
-/* 13 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1245,11 +1330,11 @@ module.exports = parseArgs;
 
 let {
     isString, isObject
-} = __webpack_require__(0);
+} = __webpack_require__(1);
 
 let {
     mergeMap
-} = __webpack_require__(1);
+} = __webpack_require__(2);
 
 const ITEM_REG = /([\w-]+)\s*=\s*(([\w-]+)|('.*?')|(".*?"))/;
 
@@ -1349,14 +1434,14 @@ module.exports = parseAttribute;
 
 
 /***/ }),
-/* 14 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-let twowaybinding = __webpack_require__(15);
-let eventError = __webpack_require__(16);
+let twowaybinding = __webpack_require__(17);
+let eventError = __webpack_require__(18);
 
 module.exports = {
     twowaybinding,
@@ -1365,7 +1450,7 @@ module.exports = {
 
 
 /***/ }),
-/* 15 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1392,7 +1477,7 @@ module.exports = (obj, path) => (tagName, attributes, childExp) => {
 
 
 /***/ }),
-/* 16 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1424,7 +1509,7 @@ let wrapEventHandler = (fun, catcher) => {
 
 
 /***/ }),
-/* 17 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1436,13 +1521,13 @@ let {
 
 let {
     isObject, isFunction, likeArray
-} = __webpack_require__(0);
+} = __webpack_require__(1);
 
 let {
     forEach
-} = __webpack_require__(1);
+} = __webpack_require__(2);
 
-let replace = __webpack_require__(18);
+let replace = __webpack_require__(20);
 
 let reduceNode = __webpack_require__(5);
 
@@ -1635,7 +1720,7 @@ module.exports = View;
 
 
 /***/ }),
-/* 18 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1647,13 +1732,13 @@ let {
 
 let {
     isNode
-} = __webpack_require__(0);
+} = __webpack_require__(1);
 
 let {
     forEach
-} = __webpack_require__(1);
+} = __webpack_require__(2);
 
-let applyAttibutes = __webpack_require__(19);
+let applyAttibutes = __webpack_require__(21);
 
 let replaceDirectly = (node, newNode) => {
     let parent = node.parentNode;
@@ -1767,7 +1852,7 @@ module.exports = (node, newNode) => {
 
 
 /***/ }),
-/* 19 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1775,7 +1860,7 @@ module.exports = (node, newNode) => {
 
 let {
     getAttributeMap
-} = __webpack_require__(20);
+} = __webpack_require__(22);
 
 let {
     hasOwnProperty
@@ -1783,7 +1868,7 @@ let {
 
 let {
     forEach
-} = __webpack_require__(1);
+} = __webpack_require__(2);
 
 let applyAttibutes = (node, newNode) => {
     // attributes
@@ -1814,15 +1899,15 @@ module.exports = applyAttibutes;
 
 
 /***/ }),
-/* 20 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-let shadowFrame = __webpack_require__(21);
+let shadowFrame = __webpack_require__(23);
 
-let startMomenter = __webpack_require__(22);
+let startMomenter = __webpack_require__(24);
 
 let getX = (elem) => {
     var x = 0;
@@ -1905,7 +1990,7 @@ module.exports = {
 
 
 /***/ }),
-/* 21 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1960,7 +2045,7 @@ module.exports = shadowFrame;
 
 
 /***/ }),
-/* 22 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2016,7 +2101,7 @@ module.exports = startMomenter;
 
 
 /***/ }),
-/* 23 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2024,7 +2109,7 @@ module.exports = startMomenter;
 
 let {
     isNode
-} = __webpack_require__(0);
+} = __webpack_require__(1);
 
 const svgNS = 'http://www.w3.org/2000/svg';
 
@@ -2063,7 +2148,7 @@ module.exports = {
 
 
 /***/ }),
-/* 24 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2071,7 +2156,7 @@ module.exports = {
 
 let {
     contain
-} = __webpack_require__(1);
+} = __webpack_require__(2);
 
 module.exports = () => {
     let docs = [];
@@ -2190,7 +2275,7 @@ let getGlobalEventTypeId = (type) => `__event_type_id_${type}`;
 
 
 /***/ }),
-/* 25 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2202,11 +2287,11 @@ let {
 
 let {
     isArray, isFunction, isObject
-} = __webpack_require__(0);
+} = __webpack_require__(1);
 
 let {
     map
-} = __webpack_require__(1);
+} = __webpack_require__(2);
 
 module.exports = (...args) => {
     let tagName = args[0],
@@ -2246,24 +2331,57 @@ module.exports = (...args) => {
 
 
 /***/ }),
-/* 26 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
+/**
+ * reading: book => note
+ */
+
+/**
+ * procedure:
+ *
+ * 0 (preface) -> 1 (sections) -> 2 (concepts) -> 3 (conclusions) -> 4 (proofs) -> 5 (applications) -> 6 (experiments) -> 7 (questions)
+ */
 let {
     view,
     n
-} = __webpack_require__(2);
+} = __webpack_require__(0);
 
-let PrefaceView = __webpack_require__(27);
-let SectionsView = __webpack_require__(30);
+let PrefaceView = __webpack_require__(29);
+let SectionsView = __webpack_require__(33);
+let ConceptView = __webpack_require__(39);
+let ConclusionsView = __webpack_require__(40);
+let ProofsView = __webpack_require__(41);
+let ApplicationsView = __webpack_require__(42);
+
+let ProcedureViewMap = {
+    preface: PrefaceView,
+    sections: SectionsView,
+    concepts: ConceptView,
+    conclusions: ConclusionsView,
+    proofs: ProofsView,
+    applications: ApplicationsView
+};
 
 module.exports = view((data, {
     update
 }) => {
     let type = data.progress.type;
+
+    let endProgressHandle = () => {
+        let nextProrgess = nextProcedureProgress(data.progress.type);
+        if (nextProrgess) {
+            // TODO
+            update('progress', nextProrgess);
+        } else {
+            // finished
+        }
+    };
+
     return n('div', {
         style: {
             height: '100%'
@@ -2271,25 +2389,14 @@ module.exports = view((data, {
     }, [
         n('div', type),
 
-        type === 'preface' && PrefaceView({
-            progress: data.progress,
-            preface: data.preface,
-            onEnd: () => {
-                update('progress', nextProcedureProgress(data.progress.type));
-            }
-        }),
-
-        type === 'sections' && SectionsView({
-            progress: data.progress,
-            sections: data.sections,
-            onEnd: () => {
-                update('progress', nextProcedureProgress(data.progress.type));
-            }
+        ProcedureViewMap[type]({
+            note: data,
+            onEnd: endProgressHandle
         })
     ]);
 });
 
-const PROCEDURES = ['preface', 'sections'];
+const PROCEDURES = ['preface', 'sections', 'concepts', 'conclusions', 'proofs', 'applications'];
 
 let nextProcedureProgress = (from) => {
     let index = PROCEDURES.findIndex((item) => item === from);
@@ -2305,13 +2412,17 @@ let nextProcedureProgress = (from) => {
                 return {
                     type: 'sections'
                 };
+            case 'concepts':
+                return {
+                    type: 'concepts'
+                };
         }
     }
 };
 
 
 /***/ }),
-/* 27 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2320,16 +2431,14 @@ let nextProcedureProgress = (from) => {
 let {
     view,
     n
-} = __webpack_require__(2);
+} = __webpack_require__(0);
 
-let InputDialog = __webpack_require__(28);
+let FieldEditor = __webpack_require__(30);
 
 module.exports = view((data, {
     update
 }) => {
-    let {
-        progress
-    } = data;
+    let progress = data.note.progress;
 
     // write down some info
     progress.stepIndex = progress.stepIndex || 0;
@@ -2344,8 +2453,8 @@ module.exports = view((data, {
                     data.onEnd && data.onEnd();
                 } else {
                     update([
-                        [`preface.${prefaceTitle}`, text],
-                        ['progress.stepIndex', progress.stepIndex + 1]
+                        [`note.preface.${prefaceTitle}`, text],
+                        ['note.progress.stepIndex', progress.stepIndex + 1]
                     ]);
                 }
             }
@@ -2353,7 +2462,23 @@ module.exports = view((data, {
     ]);
 });
 
-let FieldEditor = (data) => {
+const PREFACE_PROCEDURES = ['book-name', 'authors'];
+
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    view
+} = __webpack_require__(0);
+
+let InputDialog = __webpack_require__(31);
+
+module.exports = view((data) => {
     return InputDialog({
         title: data.title,
         text: data.text,
@@ -2366,23 +2491,21 @@ let FieldEditor = (data) => {
             data.onsure && data.onsure(text);
         }
     });
-};
-
-const PREFACE_PROCEDURES = ['book-name', 'authors'];
+});
 
 
 /***/ }),
-/* 28 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-let modal = __webpack_require__(29);
+let modal = __webpack_require__(32);
 
 let {
     view, n
-} = __webpack_require__(2);
+} = __webpack_require__(0);
 
 /**
  * data = {
@@ -2435,7 +2558,7 @@ module.exports = view((data, {
 
 
 /***/ }),
-/* 29 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2443,7 +2566,7 @@ module.exports = view((data, {
 
 let {
     view, n
-} = __webpack_require__(2);
+} = __webpack_require__(0);
 
 /**
  * data = {
@@ -2492,7 +2615,7 @@ module.exports = view((data, {
 
 
 /***/ }),
-/* 30 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2500,180 +2623,64 @@ module.exports = view((data, {
 
 let {
     n,
-    svgn,
     view
-} = __webpack_require__(2);
+} = __webpack_require__(0);
 
 let {
     parse
-} = __webpack_require__(32);
+} = __webpack_require__(34);
 
-let {
-    direction
-} = __webpack_require__(33);
+let TreeView = __webpack_require__(35);
+
+let TextEditor = __webpack_require__(9);
+
+let TwoColumn = __webpack_require__(10);
 
 /**
  * section tree dsl
  */
 
-module.exports = view((data) => {
-    let tree = parse(data.sections.text);
+module.exports = view(({
+    note,
+    onEnd
+}) => {
+    let tree = parse(note.sections.text);
 
-    let sectionTreeView = SectionTreeView({
+    let sectionTreeView = TreeView({
         tree
     });
 
-    return n('div', {
-        style: {
-            height: '100%'
-        }
-    }, [
-        n('div', {
+    return TwoColumn({
+        left: TextEditor({
+            text: note.sections.text,
+            onchange: (text) => {
+                sectionTreeView.ctx.update('tree', parse(text));
+            }
+        }),
+
+        right: n('div', {
             style: {
-                float: 'left',
                 height: '100%',
-                width: '50%',
+                border: '1px solid #999999',
+                borderRadius: 5,
+                padding: 8,
                 boxSizing: 'border-box',
-                padding: 8
+                backgroundColor: 'white'
             }
         }, [
-            n('textarea', {
-                style: {
-                    width: '100%',
-                    height: '100%',
-                    outline: 'none',
-                    resize: 'none',
-                    overflow: 'auto',
-                    boxSizing: 'border-box',
-                    border: '1px solid #999999',
-                    borderRadius: 5,
-                    fontSize: 16,
-                    padding: 5
-                },
-                oninput: (e) => {
-                    let tree = parse(e.target.value);
-                    data.tree = tree;
-                    sectionTreeView.ctx.update('tree', tree);
+            n('button', {
+                onclick: () => {
+                    onEnd && onEnd();
                 }
-            }, data.sections.text)
-        ]),
-
-        n('div', {
-            style: {
-                float: 'right',
-                width: '50%',
-                height: '100%',
-                boxSizing: 'border-box',
-                padding: 8
-            }
-        }, [
-            n('div', {
-                style: {
-                    width: '100%',
-                    height: '100%',
-                    border: '1px solid #999999',
-                    borderRadius: 5,
-                    backgroundColor: 'white'
-                }
-            }, [
-                sectionTreeView
-            ])
-        ]),
-
-        n('div style="clear:both"')
-    ]);
-});
-
-const CIRCLE_RADIUS = 10;
-const GRAPH_PADDING_X = 10;
-const GRAPH_PADDING_Y = 10;
-
-let SectionTreeView = view(({
-    tree
-}) => {
-    if (!tree) return n('div', '');
-    let {
-        width,
-        height
-    } = direction(tree, {
-        markCoord: (node, {
-            x,
-            y
-        }) => {
-            node.x = x + CIRCLE_RADIUS + GRAPH_PADDING_X;
-            node.y = y + CIRCLE_RADIUS + GRAPH_PADDING_Y;
-        },
-
-        getChildren: (node) => {
-            return node.children;
-        },
-
-        widthGap: 80,
-        heightUnit: 50
-    });
-
-    return n('div', [
-        svgn('svg', {
-            x: 0,
-            y: 0,
-            width: width + CIRCLE_RADIUS * 2 + GRAPH_PADDING_X * 2,
-            height: height + CIRCLE_RADIUS * 2 + GRAPH_PADDING_Y * 2
-        }, [
-            treeView(tree)
+            }, 'finished'),
+            sectionTreeView
         ])
-    ]);
+    });
 });
 
-let treeView = (tree) => {
-    return [
-        nodeView(tree),
-        tree.children.map((child) => {
-            return [
-                svgn('line', {
-                    x1: tree.x,
-                    y1: tree.y,
-                    x2: child.x,
-                    y2: child.y,
-                    strokeWidth: 2,
-                    stroke: 'black'
-                }),
-                treeView(child)
-            ];
-        })
-    ];
-};
-
-let nodeView = (node) => {
-    return [
-        svgn('circle', {
-            cx: node.x,
-            cy: node.y,
-            r: CIRCLE_RADIUS
-        }), svgn('text', {
-            x: node.x + CIRCLE_RADIUS * 2,
-            y: node.y + CIRCLE_RADIUS / 2
-        }, node.data)
-    ];
-};
-
 
 /***/ }),
-/* 31 */
-/***/ (function(module, exports) {
-
-module.exports = {
-    progress: {
-        type: 'sections'
-    },
-    preface: {},
-    sections: {
-        text: '#a\n##b\n##c'
-    }
-};
-
-
-/***/ }),
-/* 32 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2688,13 +2695,18 @@ module.exports = {
  * }
  */
 
-let parse = (str) => {
+const DEFAULT_DELIMITER_SYMBOL = '#';
+
+let parse = (str, {
+    delimiter = DEFAULT_DELIMITER_SYMBOL,
+    maxDepth
+} = {}) => {
     let lines = str.split('\n');
 
     let tokens = [];
     for (let i = 0; i < lines.length; i++) {
         let line = lines[i];
-        tokens.push(parseLine(line));
+        tokens.push(parseLine(line, i, delimiter, maxDepth));
     }
 
     let tree = newNode();
@@ -2703,6 +2715,7 @@ let parse = (str) => {
     for (let i = 0; i < tokens.length; i++) {
         let {
             wellCount,
+            lineNumber,
             line
         } = tokens[i];
         if (wellCount === 0) {
@@ -2720,7 +2733,7 @@ let parse = (str) => {
                 // change refer
                 refer = node;
             } else {
-                throw new Error(`Depth can only be increased step by step. Token info: ${wellCount}, ${line}.`);
+                throw new Error(`Depth can only be increased step by step. Token info: line number is ${lineNumber}, line string is ${line}, delimiter length is ${wellCount}.`);
             }
         }
     }
@@ -2766,21 +2779,31 @@ let addLine = (node, line) => {
     }
 };
 
-let parseLine = (line) => {
+let parseLine = (rawLine, lineNumber, delimiter, maxDepth) => {
     let wellCount = 0;
 
+    let line = rawLine;
+
     let trimedLine = line.trim();
-    if (trimedLine[0] === '#') {
+    if (trimedLine[0] === delimiter) {
         line = trimedLine;
     }
 
-    while (line[0] === '#') {
+    while (line[0] === delimiter) {
         wellCount++;
         line = line.substring(1);
     }
 
+    if (typeof maxDepth === 'number') {
+        if (wellCount > maxDepth) {
+            throw new Error(`The delimiter length is over than the max depth. Delimiter length is ${wellCount}, max depth is ${maxDepth}. Line number is ${lineNumber}, line string is ${rawLine}`);
+        }
+    }
+
     return {
         line,
+        rawLine,
+        lineNumber,
         wellCount
     };
 };
@@ -2792,20 +2815,116 @@ module.exports = {
 
 
 /***/ }),
-/* 33 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(34);
-
-
-/***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-let direction = __webpack_require__(35);
+let {
+    n,
+    svgn,
+    view
+} = __webpack_require__(0);
+
+let {
+    direction
+} = __webpack_require__(36);
+
+const CIRCLE_RADIUS = 10;
+const GRAPH_PADDING_X = 10;
+const GRAPH_PADDING_Y = 10;
+const widthGap = 120;
+const heightUnit = 50;
+
+module.exports = view(({
+    tree
+}) => {
+    if (!tree) return n('div', '');
+    let {
+        width,
+        height
+    } = direction(tree, {
+        markCoord: (node, {
+            x,
+            y
+        }) => {
+            node.x = x + CIRCLE_RADIUS + GRAPH_PADDING_X;
+            node.y = y + CIRCLE_RADIUS + GRAPH_PADDING_Y;
+        },
+
+        getChildren: (node) => {
+            return node.children;
+        },
+
+        widthGap,
+        heightUnit
+    });
+
+    return n('div', {
+        style: {
+            overflow: 'scroll'
+        }
+    }, [
+        svgn('svg', {
+            x: 0,
+            y: 0,
+            width: width + CIRCLE_RADIUS * 2 + GRAPH_PADDING_X * 2,
+            height: height + CIRCLE_RADIUS * 2 + GRAPH_PADDING_Y * 2
+        }, [
+            treeView(tree)
+        ])
+    ]);
+});
+
+let treeView = (tree) => {
+    return [
+        nodeView(tree),
+        tree.children.map((child) => {
+            return [
+                svgn('line', {
+                    x1: tree.x,
+                    y1: tree.y,
+                    x2: child.x,
+                    y2: child.y,
+                    strokeWidth: 2,
+                    stroke: 'black'
+                }),
+                treeView(child)
+            ];
+        })
+    ];
+};
+
+let nodeView = (node) => {
+    return [
+        svgn('circle', {
+            cx: node.x,
+            cy: node.y,
+            r: CIRCLE_RADIUS
+        }), svgn('text', {
+            x: node.x + CIRCLE_RADIUS * 2,
+            y: node.y + CIRCLE_RADIUS / 2
+        }, node.data)
+    ];
+};
+
+
+/***/ }),
+/* 36 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(37);
+
+
+/***/ }),
+/* 37 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let direction = __webpack_require__(38);
 
 module.exports = {
     direction
@@ -2813,7 +2932,7 @@ module.exports = {
 
 
 /***/ }),
-/* 35 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2859,6 +2978,212 @@ module.exports = (tree, {
     };
 
     return calculate(tree);
+};
+
+
+/***/ }),
+/* 39 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    view,
+    n
+} = __webpack_require__(0);
+
+let TwoColumn = __webpack_require__(10);
+let TextEditor = __webpack_require__(9);
+let {
+    parse
+} = __webpack_require__(34);
+
+module.exports = view(({
+    note,
+    onEnd
+}) => {
+    let conceptList = [];
+    let errMsg = '';
+
+    let updateConceptList = (text) => {
+        try {
+            conceptList = parseToConceptList(text);
+            errMsg = '';
+        } catch (err) {
+            errMsg = err.toString();
+        }
+    };
+
+    updateConceptList(note.concepts.text);
+
+    let conceptListView = ConceptView({
+        errMsg,
+        conceptList
+    });
+
+    return n('div', {
+        style: {
+            width: '100%',
+            height: '100%',
+            marginTop: 10
+        }
+    }, [
+        TwoColumn({
+            left: TextEditor({
+                text: note.concepts.text,
+                onchange: (text) => {
+                    note.concepts.text = text;
+                    updateConceptList(text);
+                    conceptListView.ctx.update([
+                        ['conceptList', conceptList],
+                        ['errMsg', errMsg]
+                    ]);
+                }
+            }),
+
+            right: n('div', {
+                style: {
+                    height: '100%',
+                    border: '1px solid #999999',
+                    borderRadius: 5,
+                    padding: 8,
+                    boxSizing: 'border-box',
+                    backgroundColor: 'white'
+                }
+            }, [
+                n('button', {
+                    onclick: () => {
+                        onEnd && onEnd();
+                    }
+                }, 'finished'),
+
+                conceptListView
+            ])
+        })
+    ]);
+});
+
+let ConceptView = view(({
+    conceptList,
+    errMsg
+}) => {
+    return n('div', {
+        style: {
+            padding: 8
+        }
+    }, [
+        errMsg ? n('div', errMsg) : n('div', conceptList.map(({
+            conceptName,
+            conceptBody
+        }) => {
+            return n('div', [
+                n('div', {
+                    style: {
+                        fontSize: 18,
+                        fontWeight: 'bold'
+                    }
+                }, conceptName),
+                n('div', {
+                    style: {
+                        marginLeft: 10,
+                        wordWrap: 'break-word'
+                    }
+                }, conceptBody)
+            ]);
+        }))
+    ]);
+});
+
+let parseToConceptList = (text) => {
+    let result = parse(text, {
+        delimiter: '-',
+        maxDepth: 1
+    });
+
+    let list = [];
+    for (let i = 0; i < result.children.length; i++) {
+        let item = result.children[i].data;
+        let lines = item.split('\n');
+        let conceptName = lines.shift().trim();
+        let conceptBody = lines.join('').trim();
+        list.push({
+            conceptName,
+            conceptBody
+        });
+    }
+
+    return list;
+};
+
+
+/***/ }),
+/* 40 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    view,
+    n
+} = __webpack_require__(0);
+
+module.exports = view(() => {
+    return n('div', 'conclusions');
+});
+
+
+/***/ }),
+/* 41 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    view,
+    n
+} = __webpack_require__(0);
+
+module.exports = view(() => {
+    return n('div', 'proofs');
+});
+
+
+/***/ }),
+/* 42 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    view,
+    n
+} = __webpack_require__(0);
+
+module.exports = view(() => {
+    return n('div', 'applications');
+});
+
+
+/***/ }),
+/* 43 */
+/***/ (function(module, exports) {
+
+module.exports = {
+    progress: {
+        type: 'concepts'
+        //type: 'sections'
+    },
+    preface: {},
+    sections: {
+        text: '#a\n##b\n##c\n#d'
+    },
+    concepts: {
+        text: '- a\nwhatewfhwiufheiufhweifuheiufhewiufheiwufheiufheiufheriufhewoiruhfeiufheiwu!\n- b\nmake'
+    }
 };
 
 

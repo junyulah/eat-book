@@ -5,14 +5,12 @@ let {
     n
 } = require('kabanery');
 
-let InputDialog = require('kabanery-modal/lib/inputDialog');
+let FieldEditor = require('../view/fieldEditor');
 
 module.exports = view((data, {
     update
 }) => {
-    let {
-        progress
-    } = data;
+    let progress = data.note.progress;
 
     // write down some info
     progress.stepIndex = progress.stepIndex || 0;
@@ -27,28 +25,13 @@ module.exports = view((data, {
                     data.onEnd && data.onEnd();
                 } else {
                     update([
-                        [`preface.${prefaceTitle}`, text],
-                        ['progress.stepIndex', progress.stepIndex + 1]
+                        [`note.preface.${prefaceTitle}`, text],
+                        ['note.progress.stepIndex', progress.stepIndex + 1]
                     ]);
                 }
             }
         })
     ]);
 });
-
-let FieldEditor = (data) => {
-    return InputDialog({
-        title: data.title,
-        text: data.text,
-        disappear: data.disappear,
-        autoHide: false,
-        sure: (upd, {
-            text
-        }) => {
-            data.text = text;
-            data.onsure && data.onsure(text);
-        }
-    });
-};
 
 const PREFACE_PROCEDURES = ['book-name', 'authors'];
