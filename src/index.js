@@ -79,6 +79,18 @@ let nextProcedureProgress = (from) => {
                 return {
                     type: 'concepts'
                 };
+            case 'conclusions':
+                return {
+                    type: 'conclusions'
+                };
+            case 'proofs':
+                return {
+                    type: 'proofs'
+                };
+            case 'applications':
+                return {
+                    type: 'applications'
+                };
         }
     }
 };

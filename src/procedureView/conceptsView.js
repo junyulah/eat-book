@@ -6,32 +6,32 @@ let {
 } = require('kabanery');
 
 let TwoColumn = require('../view/two-column');
-let TextEditor = require('../view/textEditor');
-let {
-    parse
-} = require('plain-tree-compiler');
+let ListTextView = require('../view/listTextView');
+let KeyValueListView = require('../view/keyValueListView');
 
 module.exports = view(({
     note,
     onEnd
 }) => {
-    let conceptList = [];
-    let errMsg = '';
-
-    let updateConceptList = (text) => {
-        try {
-            conceptList = parseToConceptList(text);
-            errMsg = '';
-        } catch (err) {
-            errMsg = err.toString();
-        }
+    let updateConceptList = (listData) => {
+        keyValueListView.ctx.update([
+            ['errMsg', listData.errMsg],
+            ['list', listData.list]
+        ]);
     };
 
-    updateConceptList(note.concepts.text);
+    let keyValueListView = KeyValueListView();
 
-    let conceptListView = ConceptView({
-        errMsg,
-        conceptList
+    let listTextView = ListTextView({
+        text: note.concepts.text,
+        oninit: (listData) => {
+            note.concepts.text = listData.text;
+            updateConceptList(listData);
+        },
+        onchange: (listData) => {
+            note.concepts.text = listData.text;
+            updateConceptList(listData);
+        }
     });
 
     return n('div', {
@@ -42,17 +42,7 @@ module.exports = view(({
         }
     }, [
         TwoColumn({
-            left: TextEditor({
-                text: note.concepts.text,
-                onchange: (text) => {
-                    note.concepts.text = text;
-                    updateConceptList(text);
-                    conceptListView.ctx.update([
-                        ['conceptList', conceptList],
-                        ['errMsg', errMsg]
-                    ]);
-                }
-            }),
+            left: listTextView,
 
             right: n('div', {
                 style: {
@@ -70,60 +60,8 @@ module.exports = view(({
                     }
                 }, 'finished'),
 
-                conceptListView
+                keyValueListView
             ])
         })
     ]);
 });
-
-let ConceptView = view(({
-    conceptList,
-    errMsg
-}) => {
-    return n('div', {
-        style: {
-            padding: 8
-        }
-    }, [
-        errMsg ? n('div', errMsg) : n('div', conceptList.map(({
-            conceptName,
-            conceptBody
-        }) => {
-            return n('div', [
-                n('div', {
-                    style: {
-                        fontSize: 18,
-                        fontWeight: 'bold'
-                    }
-                }, conceptName),
-                n('div', {
-                    style: {
-                        marginLeft: 10,
-                        wordWrap: 'break-word'
-                    }
-                }, conceptBody)
-            ]);
-        }))
-    ]);
-});
-
-let parseToConceptList = (text) => {
-    let result = parse(text, {
-        delimiter: '-',
-        maxDepth: 1
-    });
-
-    let list = [];
-    for (let i = 0; i < result.children.length; i++) {
-        let item = result.children[i].data;
-        let lines = item.split('\n');
-        let conceptName = lines.shift().trim();
-        let conceptBody = lines.join('').trim();
-        list.push({
-            conceptName,
-            conceptBody
-        });
-    }
-
-    return list;
-};

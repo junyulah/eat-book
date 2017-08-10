@@ -1,6 +1,7 @@
 module.exports = {
     progress: {
-        type: 'concepts'
+        type: 'proofs'
+        //type: 'conclusions'
         //type: 'sections'
     },
     preface: {},
@@ -9,5 +10,11 @@ module.exports = {
     },
     concepts: {
         text: '- a\nwhatewfhwiufheiufhweifuheiufhewiufheiwufheiufheiufheriufhewoiruhfeiufheiwu!\n- b\nmake'
+    },
+    conclusions: {
+        text: '- con1\neju!\n- con2\nmake'
+    },
+    proofs: {
+        text: ''
     }
 };

@@ -2416,6 +2416,18 @@ let nextProcedureProgress = (from) => {
                 return {
                     type: 'concepts'
                 };
+            case 'conclusions':
+                return {
+                    type: 'conclusions'
+                };
+            case 'proofs':
+                return {
+                    type: 'proofs'
+                };
+            case 'applications':
+                return {
+                    type: 'applications'
+                };
         }
     }
 };
@@ -2994,32 +3006,32 @@ let {
 } = __webpack_require__(0);
 
 let TwoColumn = __webpack_require__(10);
-let TextEditor = __webpack_require__(9);
-let {
-    parse
-} = __webpack_require__(34);
+let ListTextView = __webpack_require__(44);
+let KeyValueListView = __webpack_require__(45);
 
 module.exports = view(({
     note,
     onEnd
 }) => {
-    let conceptList = [];
-    let errMsg = '';
-
-    let updateConceptList = (text) => {
-        try {
-            conceptList = parseToConceptList(text);
-            errMsg = '';
-        } catch (err) {
-            errMsg = err.toString();
-        }
+    let updateConceptList = (listData) => {
+        keyValueListView.ctx.update([
+            ['errMsg', listData.errMsg],
+            ['list', listData.list]
+        ]);
     };
 
-    updateConceptList(note.concepts.text);
+    let keyValueListView = KeyValueListView();
 
-    let conceptListView = ConceptView({
-        errMsg,
-        conceptList
+    let listTextView = ListTextView({
+        text: note.concepts.text,
+        oninit: (listData) => {
+            note.concepts.text = listData.text;
+            updateConceptList(listData);
+        },
+        onchange: (listData) => {
+            note.concepts.text = listData.text;
+            updateConceptList(listData);
+        }
     });
 
     return n('div', {
@@ -3030,17 +3042,7 @@ module.exports = view(({
         }
     }, [
         TwoColumn({
-            left: TextEditor({
-                text: note.concepts.text,
-                onchange: (text) => {
-                    note.concepts.text = text;
-                    updateConceptList(text);
-                    conceptListView.ctx.update([
-                        ['conceptList', conceptList],
-                        ['errMsg', errMsg]
-                    ]);
-                }
-            }),
+            left: listTextView,
 
             right: n('div', {
                 style: {
@@ -3058,63 +3060,11 @@ module.exports = view(({
                     }
                 }, 'finished'),
 
-                conceptListView
+                keyValueListView
             ])
         })
     ]);
 });
-
-let ConceptView = view(({
-    conceptList,
-    errMsg
-}) => {
-    return n('div', {
-        style: {
-            padding: 8
-        }
-    }, [
-        errMsg ? n('div', errMsg) : n('div', conceptList.map(({
-            conceptName,
-            conceptBody
-        }) => {
-            return n('div', [
-                n('div', {
-                    style: {
-                        fontSize: 18,
-                        fontWeight: 'bold'
-                    }
-                }, conceptName),
-                n('div', {
-                    style: {
-                        marginLeft: 10,
-                        wordWrap: 'break-word'
-                    }
-                }, conceptBody)
-            ]);
-        }))
-    ]);
-});
-
-let parseToConceptList = (text) => {
-    let result = parse(text, {
-        delimiter: '-',
-        maxDepth: 1
-    });
-
-    let list = [];
-    for (let i = 0; i < result.children.length; i++) {
-        let item = result.children[i].data;
-        let lines = item.split('\n');
-        let conceptName = lines.shift().trim();
-        let conceptBody = lines.join('').trim();
-        list.push({
-            conceptName,
-            conceptBody
-        });
-    }
-
-    return list;
-};
 
 
 /***/ }),
@@ -3129,8 +3079,65 @@ let {
     n
 } = __webpack_require__(0);
 
-module.exports = view(() => {
-    return n('div', 'conclusions');
+let TwoColumn = __webpack_require__(10);
+let ListTextView = __webpack_require__(44);
+let KeyValueListView = __webpack_require__(45);
+
+module.exports = view(({
+    note,
+    onEnd
+}) => {
+    let updateConceptList = (listData) => {
+        keyValueListView.ctx.update([
+            ['errMsg', listData.errMsg],
+            ['list', listData.list]
+        ]);
+    };
+
+    let keyValueListView = KeyValueListView();
+
+    let listTextView = ListTextView({
+        text: note.conclusions.text,
+        oninit: (listData) => {
+            note.conclusions.text = listData.text;
+            updateConceptList(listData);
+        },
+        onchange: (listData) => {
+            note.conclusions.text = listData.text;
+            updateConceptList(listData);
+        }
+    });
+
+    return n('div', {
+        style: {
+            width: '100%',
+            height: '100%',
+            marginTop: 10
+        }
+    }, [
+        TwoColumn({
+            left: listTextView,
+
+            right: n('div', {
+                style: {
+                    height: '100%',
+                    border: '1px solid #999999',
+                    borderRadius: 5,
+                    padding: 8,
+                    boxSizing: 'border-box',
+                    backgroundColor: 'white'
+                }
+            }, [
+                n('button', {
+                    onclick: () => {
+                        onEnd && onEnd();
+                    }
+                }, 'finished'),
+
+                keyValueListView
+            ])
+        })
+    ]);
 });
 
 
@@ -3146,9 +3153,135 @@ let {
     n
 } = __webpack_require__(0);
 
-module.exports = view(() => {
-    return n('div', 'proofs');
+let TwoColumn = __webpack_require__(10);
+let ListTextView = __webpack_require__(44);
+let KeyValueListView = __webpack_require__(45);
+let {
+    plainTreeTextToObjectTree,
+    objectTreeToMap,
+    objectTreeToText
+} = __webpack_require__(46);
+
+const PROOF_TEXT_OPTIONS = {
+    delimiter: '-',
+    maxDepth: 2
+};
+
+module.exports = view(({
+    note,
+    onEnd
+}) => {
+    let updateConceptList = (listData) => {
+        keyValueListView.ctx.update([
+            ['errMsg', listData.errMsg],
+            ['list', listData.list]
+        ]);
+    };
+
+    let keyValueListView = KeyValueListView();
+
+    note.proofs.text = completeProofs(note.conclusions.text, note.proofs.text);
+
+    let listTextView = ListTextView({
+        text: note.proofs.text,
+        oninit: (listData) => {
+            note.proofs.text = listData.text;
+            updateConceptList(listData);
+        },
+        onchange: (listData) => {
+            note.proofs.text = listData.text;
+            updateConceptList(listData);
+        },
+        options: PROOF_TEXT_OPTIONS
+    });
+
+    return n('div', {
+        style: {
+            width: '100%',
+            height: '100%',
+            marginTop: 10
+        }
+    }, [
+        TwoColumn({
+            left: listTextView,
+
+            right: n('div', {
+                style: {
+                    height: '100%',
+                    border: '1px solid #999999',
+                    borderRadius: 5,
+                    padding: 8,
+                    boxSizing: 'border-box',
+                    backgroundColor: 'white'
+                }
+            }, [
+                n('button', {
+                    onclick: () => {
+                        onEnd && onEnd();
+                    }
+                }, 'finished'),
+
+                keyValueListView
+            ])
+        })
+    ]);
 });
+
+//
+let completeProofs = (conclusionText, proofText) => {
+    let conclusionList = plainTreeTextToObjectTree(conclusionText, {
+        delimiter: '-',
+        maxDepth: 1
+    });
+
+    let proofTextList = plainTreeTextToObjectTree(proofText, PROOF_TEXT_OPTIONS);
+
+    // check grammer
+
+    for (let i = 0; i < proofTextList.length; i++) {
+        let item = proofTextList[i];
+        // value, must be an array
+        if (!Array.isArray(item.value) ||
+            (item.value.length !== 2)
+        ) {
+            throw new Error(`the content of ${item.key} is not correct.`);
+        }
+
+        if (item.value[0].key !== 'content') {
+            throw new Error(`misssing content subtitle for key ${item.key}, but got ${item.value[0].key}.`);
+        }
+
+        if (item.value[1].key !== 'proof') {
+            throw new Error(`misssing proof subtitle for key ${item.key}, but got ${item.value[1].key}.`);
+        }
+    }
+
+    // add missing conclusions to proofs
+    let proofMap = objectTreeToMap(proofTextList);
+
+    for (let i = 0; i < conclusionList.length; i++) {
+        let conclusionItem = conclusionList[i];
+        let key = conclusionItem.key;
+        if (!proofMap[key]) {
+            proofTextList.push({
+                key,
+                value: [
+
+                    {
+                        key: 'content',
+                        value: conclusionItem.value
+                    },
+                    {
+                        key: 'proof',
+                        value: ''
+                    }
+                ]
+            });
+        }
+    }
+
+    return objectTreeToText(proofTextList);
+};
 
 
 /***/ }),
@@ -3174,7 +3307,8 @@ module.exports = view(() => {
 
 module.exports = {
     progress: {
-        type: 'concepts'
+        type: 'proofs'
+        //type: 'conclusions'
         //type: 'sections'
     },
     preface: {},
@@ -3183,7 +3317,217 @@ module.exports = {
     },
     concepts: {
         text: '- a\nwhatewfhwiufheiufhweifuheiufhewiufheiwufheiufheiufheriufhewoiruhfeiufheiwu!\n- b\nmake'
+    },
+    conclusions: {
+        text: '- con1\neju!\n- con2\nmake'
+    },
+    proofs: {
+        text: ''
     }
+};
+
+
+/***/ }),
+/* 44 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    view
+} = __webpack_require__(0);
+
+let TextEditor = __webpack_require__(9);
+let {
+    plainTreeTextToObjectTree
+} = __webpack_require__(46);
+
+/**
+ * key must be unique
+ */
+module.exports = view((data) => {
+    let errMsg = null,
+        list = [];
+
+    let updateList = (text) => {
+        try {
+            list = parseToList(text, data.options);
+            errMsg = null;
+        } catch (err) {
+            errMsg = err.toString();
+        }
+    };
+
+    updateList(data.text);
+
+    data.oninit && data.oninit({
+        errMsg,
+        list,
+        text: data.text
+    });
+
+    return TextEditor({
+        text: data.text,
+        onchange: (text) => {
+            data.text = text;
+            updateList(text);
+
+            data.onchange && data.onchange({
+                errMsg,
+                list,
+                text: data.text
+            });
+        }
+    });
+});
+
+let parseToList = (text, options = {
+    delimiter: '-',
+    maxDepth: 1
+}) => {
+    return plainTreeTextToObjectTree(text, options);
+};
+
+
+/***/ }),
+/* 45 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    view,
+    n
+} = __webpack_require__(0);
+
+module.exports = view(({
+    list = [],
+    errMsg
+}) => {
+    return n('div', {
+        style: {
+            padding: 8
+        }
+    }, [
+        errMsg ? n('div', errMsg) : n('div', list.map(({
+            key,
+            value
+        }) => {
+            return n('div', [
+                n('div', {
+                    style: {
+                        fontSize: 18,
+                        fontWeight: 'bold'
+                    }
+                }, key),
+
+                n('div', {
+                    style: {
+                        marginLeft: 10,
+                        wordWrap: 'break-word'
+                    }
+                }, value)
+            ]);
+        }))
+    ]);
+});
+
+
+/***/ }),
+/* 46 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    parse
+} = __webpack_require__(34);
+
+// TODO key orders
+
+let plainTreeToObjectTree = (tree) => {
+    let list = [];
+    let map = {};
+
+    for (let i = 0; i < tree.children.length; i++) {
+        let item = tree.children[i];
+        let itemData = item.data;
+        let lines = itemData.split('\n');
+        let key = lines.shift().trim();
+        let value = null;
+        if (item.children && item.children.length) {
+            value = plainTreeToObjectTree(item);
+        } else {
+            value = lines.join('').trim();
+        }
+
+        if (map[key] !== undefined) {
+            throw new Error(`repeated key ${key}.`);
+        } else {
+            map[key] = value;
+            list.push({
+                key,
+                value
+            });
+        }
+    }
+
+    return list;
+};
+
+let objectTreeToMap = (list) => {
+    if (Array.isArray(list)) {
+        let map = {};
+        for (let i = 0; i < list.length; i++) {
+            let item = list[i];
+            map[item.key] = objectTreeToMap(item.value);
+        }
+        return map;
+    } else {
+        return list;
+    }
+};
+
+let plainTreeTextToObjectTree = (text, options) => {
+    let tree = parse(text, options);
+    return plainTreeToObjectTree(tree);
+};
+
+let objectTreeToText = (list, options = {}, depth = 0) => {
+    if (Array.isArray(list)) {
+        let itemTexts = [];
+        for (let i = 0; i < list.length; i++) {
+            let {
+                key,
+                value
+            } = list[i];
+
+            let itemText = `${repeatLetter(options.delimiter || '#', depth + 1)} ${key}\n\n${objectTreeToText(value, options, depth + 1)}`;
+            itemTexts.push(itemText);
+        }
+
+        return itemTexts.join('\n\n');
+    } else {
+        return list;
+    }
+};
+
+let repeatLetter = (letter, length) => {
+    let str = '';
+    for (let i = 0; i < length; i++) {
+        str += letter;
+    }
+    return str;
+};
+
+module.exports = {
+    plainTreeTextToObjectTree,
+    plainTreeToObjectTree,
+    objectTreeToMap,
+    objectTreeToText
 };
 
 
