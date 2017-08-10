@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 11);
+/******/ 	return __webpack_require__(__webpack_require__.s = 15);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -70,7 +70,7 @@
 "use strict";
 
 
-module.exports = __webpack_require__(12);
+module.exports = __webpack_require__(16);
 
 /**
  * @readme-quick-run
@@ -391,11 +391,11 @@ let {
     isObject, funType, or, isString, isFalsy, likeArray
 } = __webpack_require__(1);
 
-let iterate = __webpack_require__(7);
+let iterate = __webpack_require__(10);
 
 let {
     map, reduce, find, findIndex, forEach, filter, any, exist, compact
-} = __webpack_require__(13);
+} = __webpack_require__(17);
 
 let contain = (list, item, fopts) => findIndex(list, item, fopts) !== -1;
 
@@ -654,13 +654,64 @@ module.exports = {
 
 
 let {
+    n,
+    view
+} = __webpack_require__(0);
+
+module.exports = view(({
+    left,
+    right,
+    leftWidthRate = 0.5,
+    rightWidthRate = 0.5
+}) => {
+    return n('div', {
+        style: {
+            width: '100%',
+            height: '100%'
+        }
+    }, [
+        n('div', {
+            style: {
+                float: 'left',
+                height: '100%',
+                width: `${leftWidthRate * 100}%`,
+                boxSizing: 'border-box'
+            }
+        }, [
+            left
+        ]),
+
+        n('div', {
+            style: {
+                float: 'right',
+                width: `${rightWidthRate * 100}%`,
+                height: '100%',
+                boxSizing: 'border-box'
+            }
+        }, [
+            right
+        ]),
+
+        n('div style="clear:both"')
+    ]);
+});
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
     map
 } = __webpack_require__(2);
 let {
     isObject, isNode
 } = __webpack_require__(1);
 
-let parseArgs = __webpack_require__(14);
+let parseArgs = __webpack_require__(18);
 
 const KABANERY_NODE = 'kabanery_node';
 
@@ -761,7 +812,7 @@ module.exports = {
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -769,11 +820,11 @@ module.exports = {
 
 let {
     createElement, createSvgElement
-} = __webpack_require__(25);
+} = __webpack_require__(29);
 
 let {
     bindEvents
-} = __webpack_require__(6);
+} = __webpack_require__(7);
 
 let {
     map
@@ -781,7 +832,7 @@ let {
 
 let {
     isKabaneryNode
-} = __webpack_require__(4);
+} = __webpack_require__(5);
 
 let reduceNode = (node) => {
     if (isKabaneryNode(node)) {
@@ -803,13 +854,13 @@ module.exports = reduceNode;
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-let EventMatrix = __webpack_require__(26);
+let EventMatrix = __webpack_require__(30);
 
 let {
     listenEventType,
@@ -834,7 +885,118 @@ module.exports = {
 
 
 /***/ }),
-/* 7 */
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    view
+} = __webpack_require__(0);
+
+let TextEditor = __webpack_require__(13);
+let {
+    plainTreeTextToObjectTree
+} = __webpack_require__(14);
+
+/**
+ * key must be unique
+ */
+module.exports = view((data) => {
+    let errMsg = null,
+        list = [];
+
+    let updateList = (text) => {
+        try {
+            list = parseToList(text, data.options);
+            errMsg = null;
+        } catch (err) {
+            errMsg = err.toString();
+        }
+    };
+
+    updateList(data.text);
+
+    data.oninit && data.oninit({
+        errMsg,
+        list,
+        text: data.text
+    });
+
+    return TextEditor({
+        text: data.text,
+        onchange: (text) => {
+            data.text = text;
+            updateList(text);
+
+            data.onchange && data.onchange({
+                errMsg,
+                list,
+                text: data.text
+            });
+        }
+    });
+});
+
+let parseToList = (text, options = {
+    delimiter: '-',
+    maxDepth: 1
+}) => {
+    return plainTreeTextToObjectTree(text, options);
+};
+
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    view,
+    n
+} = __webpack_require__(0);
+
+module.exports = view(({
+    list = [],
+    errMsg,
+    valueRender = id
+}) => {
+    return n('div', {
+        style: {
+            padding: 8
+        }
+    }, [
+        errMsg ? n('div', errMsg) : n('div', list.map(({
+            key,
+            value
+        }) => {
+            return n('div', [
+                n('div', {
+                    style: {
+                        fontSize: 18,
+                        fontWeight: 'bold'
+                    }
+                }, key),
+
+                n('div', {
+                    style: {
+                        marginLeft: 10,
+                        wordWrap: 'break-word'
+                    }
+                }, valueRender(value))
+            ]);
+        }))
+    ]);
+});
+
+let id = v => v;
+
+
+/***/ }),
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -941,7 +1103,7 @@ module.exports = iterate;
 
 
 /***/ }),
-/* 8 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -949,7 +1111,7 @@ module.exports = iterate;
 
 let {
     attachDocument
-} = __webpack_require__(6);
+} = __webpack_require__(7);
 
 let {
     isNode
@@ -959,7 +1121,7 @@ let {
     flat, forEach
 } = __webpack_require__(2);
 
-let reduceNode = __webpack_require__(5);
+let reduceNode = __webpack_require__(6);
 
 /**
  * @param parentNode
@@ -988,7 +1150,142 @@ let getDoc = (node) => {
 
 
 /***/ }),
-/* 9 */
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * a simple way to write down a tree with out indent or brackets
+ *
+ * node = {
+ *    data: "",
+ *    children: []
+ * }
+ */
+
+const DEFAULT_DELIMITER_SYMBOL = '#';
+
+let parse = (str, {
+    delimiter = DEFAULT_DELIMITER_SYMBOL,
+    maxDepth
+} = {}) => {
+    let lines = str.split('\n');
+
+    let tokens = [];
+    for (let i = 0; i < lines.length; i++) {
+        let line = lines[i];
+        tokens.push(parseLine(line, i, delimiter, maxDepth));
+    }
+
+    let tree = newNode();
+    let refer = tree;
+
+    for (let i = 0; i < tokens.length; i++) {
+        let {
+            wellCount,
+            lineNumber,
+            line
+        } = tokens[i];
+        if (wellCount === 0) {
+            addLine(refer, line);
+        } else {
+            // find the parent
+            // create new node
+            // add the new node to parent's children
+            if (wellCount <= refer.depth + 1) {
+                let node = newNode(wellCount);
+                let ancestor = getAncestor(refer, wellCount - 1);
+                addChild(ancestor, node);
+                addLine(node, line);
+
+                // change refer
+                refer = node;
+            } else {
+                throw new Error(`Depth can only be increased step by step. Token info: line number is ${lineNumber}, line string is ${line}, delimiter length is ${wellCount}.`);
+            }
+        }
+    }
+
+    return tree;
+};
+
+let toJsonObject = (tree) => {
+    return {
+        data: tree.data,
+        depth: tree.depth,
+        children: tree.children.map((child) => toJsonObject(child))
+    };
+};
+
+let getAncestor = (node, ancestorDepth) => {
+    if (node.depth < ancestorDepth) return null;
+    else if (node.depth === ancestorDepth) return node;
+    else {
+        return getAncestor(node.parent, ancestorDepth);
+    }
+};
+
+let newNode = (depth = 0) => {
+    return {
+        data: null,
+        children: [],
+        depth,
+        parent: null
+    };
+};
+
+let addChild = (node1, node2) => {
+    node1.children.push(node2);
+    node2.parent = node1;
+};
+
+let addLine = (node, line) => {
+    if (node.data === null) {
+        node.data = line;
+    } else {
+        node.data += ('\n' + line);
+    }
+};
+
+let parseLine = (rawLine, lineNumber, delimiter, maxDepth) => {
+    let wellCount = 0;
+
+    let line = rawLine;
+
+    let trimedLine = line.trim();
+    if (trimedLine[0] === delimiter) {
+        line = trimedLine;
+    }
+
+    while (line[0] === delimiter) {
+        wellCount++;
+        line = line.substring(1);
+    }
+
+    if (typeof maxDepth === 'number') {
+        if (wellCount > maxDepth) {
+            throw new Error(`The delimiter length is over than the max depth. Delimiter length is ${wellCount}, max depth is ${maxDepth}. Line number is ${lineNumber}, line string is ${rawLine}`);
+        }
+    }
+
+    return {
+        line,
+        rawLine,
+        lineNumber,
+        wellCount
+    };
+};
+
+module.exports = {
+    parse,
+    toJsonObject
+};
+
+
+/***/ }),
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1022,58 +1319,103 @@ module.exports = view((data) => {
 
 
 /***/ }),
-/* 10 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 let {
-    n,
-    view
-} = __webpack_require__(0);
+    parse
+} = __webpack_require__(12);
 
-module.exports = view(({
-    left,
-    right,
-    leftWidthRate = 0.5,
-    rightWidthRate = 0.5
-}) => {
-    return n('div', {
-        style: {
-            width: '100%',
-            height: '100%'
+// TODO key orders
+
+let plainTreeToObjectTree = (tree) => {
+    let list = [];
+    let map = {};
+
+    for (let i = 0; i < tree.children.length; i++) {
+        let item = tree.children[i];
+        let itemData = item.data;
+        let lines = itemData.split('\n');
+        let key = lines.shift().trim();
+        let value = null;
+        if (item.children && item.children.length) {
+            value = plainTreeToObjectTree(item);
+        } else {
+            value = lines.join('').trim();
         }
-    }, [
-        n('div', {
-            style: {
-                float: 'left',
-                height: '100%',
-                width: `${leftWidthRate * 100}%`,
-                boxSizing: 'border-box'
-            }
-        }, [
-            left
-        ]),
 
-        n('div', {
-            style: {
-                float: 'right',
-                width: `${rightWidthRate * 100}%`,
-                height: '100%',
-                boxSizing: 'border-box'
-            }
-        }, [
-            right
-        ]),
+        if (map[key] !== undefined) {
+            throw new Error(`repeated key ${key}.`);
+        } else {
+            map[key] = value;
+            list.push({
+                key,
+                value
+            });
+        }
+    }
 
-        n('div style="clear:both"')
-    ]);
-});
+    return list;
+};
+
+let objectTreeToMap = (list) => {
+    if (Array.isArray(list)) {
+        let map = {};
+        for (let i = 0; i < list.length; i++) {
+            let item = list[i];
+            map[item.key] = objectTreeToMap(item.value);
+        }
+        return map;
+    } else {
+        return list;
+    }
+};
+
+let plainTreeTextToObjectTree = (text, options) => {
+    let tree = parse(text, options);
+    return plainTreeToObjectTree(tree);
+};
+
+let objectTreeToText = (list, options = {}, depth = 0) => {
+    if (Array.isArray(list)) {
+        let itemTexts = [];
+        for (let i = 0; i < list.length; i++) {
+            let {
+                key,
+                value
+            } = list[i];
+
+            let itemText = `${repeatLetter(options.delimiter || '#', depth + 1)} ${key}\n\n${objectTreeToText(value, options, depth + 1)}`;
+            itemTexts.push(itemText);
+        }
+
+        return itemTexts.join('\n\n');
+    } else {
+        return list;
+    }
+};
+
+let repeatLetter = (letter, length) => {
+    let str = '';
+    for (let i = 0; i < length; i++) {
+        str += letter;
+    }
+    return str;
+};
+
+module.exports = {
+    plainTreeTextToObjectTree,
+    plainTreeToObjectTree,
+    objectTreeToMap,
+    objectTreeToText
+};
 
 
 /***/ }),
-/* 11 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1083,14 +1425,16 @@ let {
     mount
 } = __webpack_require__(0);
 
-let EatBookView = __webpack_require__(28);
-let testData = __webpack_require__(43);
+let EatBookView = __webpack_require__(32);
+let testData = __webpack_require__(47);
 
-mount(EatBookView(testData), document.body);
+mount(EatBookView({
+    note: testData
+}), document.body);
 
 
 /***/ }),
-/* 12 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1098,19 +1442,19 @@ mount(EatBookView(testData), document.body);
 
 let {
     n, svgn, bindPlugs, toHTML, parseArgs, isKabaneryNode, cn
-} = __webpack_require__(4);
+} = __webpack_require__(5);
 
-let plugs = __webpack_require__(16);
+let plugs = __webpack_require__(20);
 
-let view = __webpack_require__(19);
+let view = __webpack_require__(23);
 
-let mount = __webpack_require__(8);
+let mount = __webpack_require__(11);
 
-let N = __webpack_require__(27);
+let N = __webpack_require__(31);
 
-let reduceNode = __webpack_require__(5);
+let reduceNode = __webpack_require__(6);
 
-let {dispatchEvent} = __webpack_require__(6);
+let {dispatchEvent} = __webpack_require__(7);
 
 module.exports = {
     n,
@@ -1131,13 +1475,13 @@ module.exports = {
 
 
 /***/ }),
-/* 13 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-let iterate = __webpack_require__(7);
+let iterate = __webpack_require__(10);
 
 let defauls = {
     eq: (v1, v2) => v1 === v2
@@ -1236,13 +1580,13 @@ module.exports = {
 
 
 /***/ }),
-/* 14 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-let parseAttribute = __webpack_require__(15);
+let parseAttribute = __webpack_require__(19);
 
 let {
     isString, isObject, isNode, likeArray, isNumber, isBool
@@ -1322,7 +1666,7 @@ module.exports = parseArgs;
 
 
 /***/ }),
-/* 15 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1434,14 +1778,14 @@ module.exports = parseAttribute;
 
 
 /***/ }),
-/* 16 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-let twowaybinding = __webpack_require__(17);
-let eventError = __webpack_require__(18);
+let twowaybinding = __webpack_require__(21);
+let eventError = __webpack_require__(22);
 
 module.exports = {
     twowaybinding,
@@ -1450,7 +1794,7 @@ module.exports = {
 
 
 /***/ }),
-/* 17 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1477,7 +1821,7 @@ module.exports = (obj, path) => (tagName, attributes, childExp) => {
 
 
 /***/ }),
-/* 18 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1509,7 +1853,7 @@ let wrapEventHandler = (fun, catcher) => {
 
 
 /***/ }),
-/* 19 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1527,11 +1871,11 @@ let {
     forEach
 } = __webpack_require__(2);
 
-let replace = __webpack_require__(20);
+let replace = __webpack_require__(24);
 
-let reduceNode = __webpack_require__(5);
+let reduceNode = __webpack_require__(6);
 
-let mount = __webpack_require__(8);
+let mount = __webpack_require__(11);
 
 /**
  * render function: (data) => node
@@ -1720,7 +2064,7 @@ module.exports = View;
 
 
 /***/ }),
-/* 20 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1738,7 +2082,7 @@ let {
     forEach
 } = __webpack_require__(2);
 
-let applyAttibutes = __webpack_require__(21);
+let applyAttibutes = __webpack_require__(25);
 
 let replaceDirectly = (node, newNode) => {
     let parent = node.parentNode;
@@ -1852,7 +2196,7 @@ module.exports = (node, newNode) => {
 
 
 /***/ }),
-/* 21 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1860,7 +2204,7 @@ module.exports = (node, newNode) => {
 
 let {
     getAttributeMap
-} = __webpack_require__(22);
+} = __webpack_require__(26);
 
 let {
     hasOwnProperty
@@ -1899,15 +2243,15 @@ module.exports = applyAttibutes;
 
 
 /***/ }),
-/* 22 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-let shadowFrame = __webpack_require__(23);
+let shadowFrame = __webpack_require__(27);
 
-let startMomenter = __webpack_require__(24);
+let startMomenter = __webpack_require__(28);
 
 let getX = (elem) => {
     var x = 0;
@@ -1990,7 +2334,7 @@ module.exports = {
 
 
 /***/ }),
-/* 23 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2045,7 +2389,7 @@ module.exports = shadowFrame;
 
 
 /***/ }),
-/* 24 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2101,7 +2445,7 @@ module.exports = startMomenter;
 
 
 /***/ }),
-/* 25 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2148,7 +2492,7 @@ module.exports = {
 
 
 /***/ }),
-/* 26 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2275,7 +2619,7 @@ let getGlobalEventTypeId = (type) => `__event_type_id_${type}`;
 
 
 /***/ }),
-/* 27 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2283,7 +2627,7 @@ let getGlobalEventTypeId = (type) => `__event_type_id_${type}`;
 
 let {
     n
-} = __webpack_require__(4);
+} = __webpack_require__(5);
 
 let {
     isArray, isFunction, isObject
@@ -2331,7 +2675,7 @@ module.exports = (...args) => {
 
 
 /***/ }),
-/* 28 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2351,14 +2695,14 @@ let {
     n
 } = __webpack_require__(0);
 
-let Crumbs = __webpack_require__(47);
+let Crumbs = __webpack_require__(33);
 
-let PrefaceView = __webpack_require__(29);
-let SectionsView = __webpack_require__(33);
-let ConceptView = __webpack_require__(39);
-let ConclusionsView = __webpack_require__(40);
-let ProofsView = __webpack_require__(41);
-let ApplicationsView = __webpack_require__(42);
+let PrefaceView = __webpack_require__(34);
+let SectionsView = __webpack_require__(38);
+let ConceptView = __webpack_require__(43);
+let ConclusionsView = __webpack_require__(44);
+let ProofsView = __webpack_require__(45);
+let ApplicationsView = __webpack_require__(46);
 
 let ProcedureViewMap = {
     preface: PrefaceView,
@@ -2372,13 +2716,13 @@ let ProcedureViewMap = {
 module.exports = view((data, {
     update
 }) => {
-    let type = data.progress.type;
+    let type = data.note.progress.type;
 
     let endProgressHandle = () => {
-        let nextProrgess = nextProcedureProgress(data.progress.type);
+        let nextProrgess = nextProcedureProgress(data.note.progress.type);
         if (nextProrgess) {
             // TODO
-            update('progress', nextProrgess);
+            update('note.progress', nextProrgess);
         } else {
             // finished
         }
@@ -2394,13 +2738,18 @@ module.exports = view((data, {
             index: PROCEDURES.findIndex((item) => item === type),
             onchange: (index) => {
                 let targetType = PROCEDURES[index];
-                update('progress', initProgressMap[targetType]);
+                update('note.progress', getInitProgressMap()[targetType]);
+
+                data.onchange && data.onchange(data.note);
             }
         }),
 
         ProcedureViewMap[type]({
-            note: data,
-            onEnd: endProgressHandle
+            note: data.note,
+            onEnd: endProgressHandle,
+            onchange: () => {
+                data.onchange && data.onchange(data.note);
+            }
         })
     ]);
 });
@@ -2411,35 +2760,37 @@ let nextProcedureProgress = (from) => {
     let index = PROCEDURES.findIndex((item) => item === from);
     if (index < PROCEDURES.length - 1) {
         let targetType = PROCEDURES[index + 1];
-        return initProgressMap[targetType];
+        return getInitProgressMap()[targetType];
     }
 };
 
-let initProgressMap = {
-    preface: {
-        type: 'preface',
-        stepIndex: 0
-    },
-    sections: {
-        type: 'sections'
-    },
-    concepts: {
-        type: 'concepts'
-    },
-    conclusions: {
-        type: 'conclusions'
-    },
-    proofs: {
-        type: 'proofs'
-    },
-    applications: {
-        type: 'applications'
-    }
+let getInitProgressMap = () => {
+    return {
+        preface: {
+            type: 'preface',
+            stepIndex: 0
+        },
+        sections: {
+            type: 'sections'
+        },
+        concepts: {
+            type: 'concepts'
+        },
+        conclusions: {
+            type: 'conclusions'
+        },
+        proofs: {
+            type: 'proofs'
+        },
+        applications: {
+            type: 'applications'
+        }
+    };
 };
 
 
 /***/ }),
-/* 29 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2450,7 +2801,48 @@ let {
     n
 } = __webpack_require__(0);
 
-let FieldEditor = __webpack_require__(30);
+module.exports = view(({
+    list = [],
+    index,
+    onchange
+}) => {
+    if (index === undefined || index === null) {
+        index = list.length - 1;
+    }
+
+    return n('div', list.map((item, i) => {
+        let itemStyle = {
+            margin: '0 8'
+        };
+        if (i === index) {
+            itemStyle.color = 'rgb(0,161,241)';
+        }
+        return [
+            n('a', {
+                style: itemStyle,
+                onclick: () => {
+                    onchange && onchange(i);
+                }
+            }, item),
+            i < list.length - 1 && n('span', '>')
+        ];
+    }));
+});
+
+
+/***/ }),
+/* 34 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    view,
+    n
+} = __webpack_require__(0);
+
+let FieldEditor = __webpack_require__(35);
 
 module.exports = view((data, {
     update
@@ -2464,15 +2856,16 @@ module.exports = view((data, {
     return n('div', [
         FieldEditor({
             title: prefaceTitle,
-            text: '',
+            text: data.note.preface[prefaceTitle] || '',
             onsure: (text) => {
-                if (progress.stepIndex === PREFACE_PROCEDURES.length - 1) { // last one
+                update([
+                    [`note.preface.${prefaceTitle}`, text],
+                    ['note.progress.stepIndex', progress.stepIndex + 1]
+                ]);
+                data.onchange && data.onchange(data.note);
+
+                if (progress.stepIndex === PREFACE_PROCEDURES.length) { // last one
                     data.onEnd && data.onEnd();
-                } else {
-                    update([
-                        [`note.preface.${prefaceTitle}`, text],
-                        ['note.progress.stepIndex', progress.stepIndex + 1]
-                    ]);
                 }
             }
         })
@@ -2483,7 +2876,7 @@ const PREFACE_PROCEDURES = ['book-name', 'authors'];
 
 
 /***/ }),
-/* 30 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2493,7 +2886,7 @@ let {
     view
 } = __webpack_require__(0);
 
-let InputDialog = __webpack_require__(31);
+let InputDialog = __webpack_require__(36);
 
 module.exports = view((data) => {
     return InputDialog({
@@ -2512,13 +2905,13 @@ module.exports = view((data) => {
 
 
 /***/ }),
-/* 31 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-let modal = __webpack_require__(32);
+let modal = __webpack_require__(37);
 
 let {
     view, n
@@ -2575,7 +2968,7 @@ module.exports = view((data, {
 
 
 /***/ }),
-/* 32 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2632,7 +3025,7 @@ module.exports = view((data, {
 
 
 /***/ }),
-/* 33 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2645,13 +3038,13 @@ let {
 
 let {
     parse
-} = __webpack_require__(34);
+} = __webpack_require__(12);
 
-let TreeView = __webpack_require__(35);
+let TreeView = __webpack_require__(39);
 
-let TextEditor = __webpack_require__(9);
+let TextEditor = __webpack_require__(13);
 
-let TwoColumn = __webpack_require__(10);
+let TwoColumn = __webpack_require__(4);
 
 /**
  * section tree dsl
@@ -2659,7 +3052,8 @@ let TwoColumn = __webpack_require__(10);
 
 module.exports = view(({
     note,
-    onEnd
+    onEnd,
+    onchange
 }) => {
     let tree = parse(note.sections.text);
 
@@ -2671,7 +3065,9 @@ module.exports = view(({
         left: TextEditor({
             text: note.sections.text,
             onchange: (text) => {
+                note.sections.text = text;
                 sectionTreeView.ctx.update('tree', parse(text));
+                onchange && onchange(note);
             }
         }),
 
@@ -2697,142 +3093,7 @@ module.exports = view(({
 
 
 /***/ }),
-/* 34 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/**
- * a simple way to write down a tree with out indent or brackets
- *
- * node = {
- *    data: "",
- *    children: []
- * }
- */
-
-const DEFAULT_DELIMITER_SYMBOL = '#';
-
-let parse = (str, {
-    delimiter = DEFAULT_DELIMITER_SYMBOL,
-    maxDepth
-} = {}) => {
-    let lines = str.split('\n');
-
-    let tokens = [];
-    for (let i = 0; i < lines.length; i++) {
-        let line = lines[i];
-        tokens.push(parseLine(line, i, delimiter, maxDepth));
-    }
-
-    let tree = newNode();
-    let refer = tree;
-
-    for (let i = 0; i < tokens.length; i++) {
-        let {
-            wellCount,
-            lineNumber,
-            line
-        } = tokens[i];
-        if (wellCount === 0) {
-            addLine(refer, line);
-        } else {
-            // find the parent
-            // create new node
-            // add the new node to parent's children
-            if (wellCount <= refer.depth + 1) {
-                let node = newNode(wellCount);
-                let ancestor = getAncestor(refer, wellCount - 1);
-                addChild(ancestor, node);
-                addLine(node, line);
-
-                // change refer
-                refer = node;
-            } else {
-                throw new Error(`Depth can only be increased step by step. Token info: line number is ${lineNumber}, line string is ${line}, delimiter length is ${wellCount}.`);
-            }
-        }
-    }
-
-    return tree;
-};
-
-let toJsonObject = (tree) => {
-    return {
-        data: tree.data,
-        depth: tree.depth,
-        children: tree.children.map((child) => toJsonObject(child))
-    };
-};
-
-let getAncestor = (node, ancestorDepth) => {
-    if (node.depth < ancestorDepth) return null;
-    else if (node.depth === ancestorDepth) return node;
-    else {
-        return getAncestor(node.parent, ancestorDepth);
-    }
-};
-
-let newNode = (depth = 0) => {
-    return {
-        data: null,
-        children: [],
-        depth,
-        parent: null
-    };
-};
-
-let addChild = (node1, node2) => {
-    node1.children.push(node2);
-    node2.parent = node1;
-};
-
-let addLine = (node, line) => {
-    if (node.data === null) {
-        node.data = line;
-    } else {
-        node.data += ('\n' + line);
-    }
-};
-
-let parseLine = (rawLine, lineNumber, delimiter, maxDepth) => {
-    let wellCount = 0;
-
-    let line = rawLine;
-
-    let trimedLine = line.trim();
-    if (trimedLine[0] === delimiter) {
-        line = trimedLine;
-    }
-
-    while (line[0] === delimiter) {
-        wellCount++;
-        line = line.substring(1);
-    }
-
-    if (typeof maxDepth === 'number') {
-        if (wellCount > maxDepth) {
-            throw new Error(`The delimiter length is over than the max depth. Delimiter length is ${wellCount}, max depth is ${maxDepth}. Line number is ${lineNumber}, line string is ${rawLine}`);
-        }
-    }
-
-    return {
-        line,
-        rawLine,
-        lineNumber,
-        wellCount
-    };
-};
-
-module.exports = {
-    parse,
-    toJsonObject
-};
-
-
-/***/ }),
-/* 35 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2846,7 +3107,7 @@ let {
 
 let {
     direction
-} = __webpack_require__(36);
+} = __webpack_require__(40);
 
 const CIRCLE_RADIUS = 10;
 const GRAPH_PADDING_X = 10;
@@ -2928,20 +3189,20 @@ let nodeView = (node) => {
 
 
 /***/ }),
-/* 36 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(37);
+module.exports = __webpack_require__(41);
 
 
 /***/ }),
-/* 37 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-let direction = __webpack_require__(38);
+let direction = __webpack_require__(42);
 
 module.exports = {
     direction
@@ -2949,7 +3210,7 @@ module.exports = {
 
 
 /***/ }),
-/* 38 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2999,7 +3260,7 @@ module.exports = (tree, {
 
 
 /***/ }),
-/* 39 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3010,9 +3271,9 @@ let {
     n
 } = __webpack_require__(0);
 
-let TwoColumn = __webpack_require__(10);
-let ListTextView = __webpack_require__(44);
-let KeyValueListView = __webpack_require__(45);
+let TwoColumn = __webpack_require__(4);
+let ListTextView = __webpack_require__(8);
+let KeyValueListView = __webpack_require__(9);
 
 module.exports = view(({
     note,
@@ -3073,7 +3334,7 @@ module.exports = view(({
 
 
 /***/ }),
-/* 40 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3084,9 +3345,9 @@ let {
     n
 } = __webpack_require__(0);
 
-let TwoColumn = __webpack_require__(10);
-let ListTextView = __webpack_require__(44);
-let KeyValueListView = __webpack_require__(45);
+let TwoColumn = __webpack_require__(4);
+let ListTextView = __webpack_require__(8);
+let KeyValueListView = __webpack_require__(9);
 
 module.exports = view(({
     note,
@@ -3147,7 +3408,7 @@ module.exports = view(({
 
 
 /***/ }),
-/* 41 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3158,14 +3419,14 @@ let {
     n
 } = __webpack_require__(0);
 
-let TwoColumn = __webpack_require__(10);
-let ListTextView = __webpack_require__(44);
-let KeyValueListView = __webpack_require__(45);
+let TwoColumn = __webpack_require__(4);
+let ListTextView = __webpack_require__(8);
+let KeyValueListView = __webpack_require__(9);
 let {
     plainTreeTextToObjectTree,
     objectTreeToMap,
     objectTreeToText
-} = __webpack_require__(46);
+} = __webpack_require__(14);
 
 const PROOF_TEXT_OPTIONS = {
     delimiter: '-',
@@ -3307,7 +3568,7 @@ let completeProofs = (conclusionText, proofText) => {
 
 
 /***/ }),
-/* 42 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3324,7 +3585,7 @@ module.exports = view(() => {
 
 
 /***/ }),
-/* 43 */
+/* 47 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -3333,7 +3594,9 @@ module.exports = {
         //type: 'conclusions'
         //type: 'sections'
     },
-    preface: {},
+    preface: {
+        'book-name': 'test-book'
+    },
     sections: {
         text: '#a\n##b\n##c\n#d'
     },
@@ -3347,254 +3610,6 @@ module.exports = {
         text: '- new\n--content\nsomething\n--proof\nwhat!'
     }
 };
-
-
-/***/ }),
-/* 44 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-let {
-    view
-} = __webpack_require__(0);
-
-let TextEditor = __webpack_require__(9);
-let {
-    plainTreeTextToObjectTree
-} = __webpack_require__(46);
-
-/**
- * key must be unique
- */
-module.exports = view((data) => {
-    let errMsg = null,
-        list = [];
-
-    let updateList = (text) => {
-        try {
-            list = parseToList(text, data.options);
-            errMsg = null;
-        } catch (err) {
-            errMsg = err.toString();
-        }
-    };
-
-    updateList(data.text);
-
-    data.oninit && data.oninit({
-        errMsg,
-        list,
-        text: data.text
-    });
-
-    return TextEditor({
-        text: data.text,
-        onchange: (text) => {
-            data.text = text;
-            updateList(text);
-
-            data.onchange && data.onchange({
-                errMsg,
-                list,
-                text: data.text
-            });
-        }
-    });
-});
-
-let parseToList = (text, options = {
-    delimiter: '-',
-    maxDepth: 1
-}) => {
-    return plainTreeTextToObjectTree(text, options);
-};
-
-
-/***/ }),
-/* 45 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-let {
-    view,
-    n
-} = __webpack_require__(0);
-
-module.exports = view(({
-    list = [],
-    errMsg,
-    valueRender = id
-}) => {
-    return n('div', {
-        style: {
-            padding: 8
-        }
-    }, [
-        errMsg ? n('div', errMsg) : n('div', list.map(({
-            key,
-            value
-        }) => {
-            return n('div', [
-                n('div', {
-                    style: {
-                        fontSize: 18,
-                        fontWeight: 'bold'
-                    }
-                }, key),
-
-                n('div', {
-                    style: {
-                        marginLeft: 10,
-                        wordWrap: 'break-word'
-                    }
-                }, valueRender(value))
-            ]);
-        }))
-    ]);
-});
-
-let id = v => v;
-
-
-/***/ }),
-/* 46 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-let {
-    parse
-} = __webpack_require__(34);
-
-// TODO key orders
-
-let plainTreeToObjectTree = (tree) => {
-    let list = [];
-    let map = {};
-
-    for (let i = 0; i < tree.children.length; i++) {
-        let item = tree.children[i];
-        let itemData = item.data;
-        let lines = itemData.split('\n');
-        let key = lines.shift().trim();
-        let value = null;
-        if (item.children && item.children.length) {
-            value = plainTreeToObjectTree(item);
-        } else {
-            value = lines.join('').trim();
-        }
-
-        if (map[key] !== undefined) {
-            throw new Error(`repeated key ${key}.`);
-        } else {
-            map[key] = value;
-            list.push({
-                key,
-                value
-            });
-        }
-    }
-
-    return list;
-};
-
-let objectTreeToMap = (list) => {
-    if (Array.isArray(list)) {
-        let map = {};
-        for (let i = 0; i < list.length; i++) {
-            let item = list[i];
-            map[item.key] = objectTreeToMap(item.value);
-        }
-        return map;
-    } else {
-        return list;
-    }
-};
-
-let plainTreeTextToObjectTree = (text, options) => {
-    let tree = parse(text, options);
-    return plainTreeToObjectTree(tree);
-};
-
-let objectTreeToText = (list, options = {}, depth = 0) => {
-    if (Array.isArray(list)) {
-        let itemTexts = [];
-        for (let i = 0; i < list.length; i++) {
-            let {
-                key,
-                value
-            } = list[i];
-
-            let itemText = `${repeatLetter(options.delimiter || '#', depth + 1)} ${key}\n\n${objectTreeToText(value, options, depth + 1)}`;
-            itemTexts.push(itemText);
-        }
-
-        return itemTexts.join('\n\n');
-    } else {
-        return list;
-    }
-};
-
-let repeatLetter = (letter, length) => {
-    let str = '';
-    for (let i = 0; i < length; i++) {
-        str += letter;
-    }
-    return str;
-};
-
-module.exports = {
-    plainTreeTextToObjectTree,
-    plainTreeToObjectTree,
-    objectTreeToMap,
-    objectTreeToText
-};
-
-
-/***/ }),
-/* 47 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-let {
-    view,
-    n
-} = __webpack_require__(0);
-
-module.exports = view(({
-    list = [],
-    index,
-    onchange
-}) => {
-    if (index === undefined || index === null) {
-        index = list.length - 1;
-    }
-
-    return n('div', list.map((item, i) => {
-        let itemStyle = {
-            margin: '0 8'
-        };
-        if (i === index) {
-            itemStyle.color = 'rgb(0,161,241)';
-        }
-        return [
-            n('a', {
-                style: itemStyle,
-                onclick: () => {
-                    onchange && onchange(i);
-                }
-            }, item),
-            i < list.length - 1 && n('span', '>')
-        ];
-    }));
-});
 
 
 /***/ })

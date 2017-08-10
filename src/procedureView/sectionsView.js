@@ -21,7 +21,8 @@ let TwoColumn = require('../view/two-column');
 
 module.exports = view(({
     note,
-    onEnd
+    onEnd,
+    onchange
 }) => {
     let tree = parse(note.sections.text);
 
@@ -33,7 +34,9 @@ module.exports = view(({
         left: TextEditor({
             text: note.sections.text,
             onchange: (text) => {
+                note.sections.text = text;
                 sectionTreeView.ctx.update('tree', parse(text));
+                onchange && onchange(note);
             }
         }),
 

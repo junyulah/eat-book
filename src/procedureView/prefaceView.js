@@ -19,15 +19,16 @@ module.exports = view((data, {
     return n('div', [
         FieldEditor({
             title: prefaceTitle,
-            text: '',
+            text: data.note.preface[prefaceTitle] || '',
             onsure: (text) => {
-                if (progress.stepIndex === PREFACE_PROCEDURES.length - 1) { // last one
+                update([
+                    [`note.preface.${prefaceTitle}`, text],
+                    ['note.progress.stepIndex', progress.stepIndex + 1]
+                ]);
+                data.onchange && data.onchange(data.note);
+
+                if (progress.stepIndex === PREFACE_PROCEDURES.length) { // last one
                     data.onEnd && data.onEnd();
-                } else {
-                    update([
-                        [`note.preface.${prefaceTitle}`, text],
-                        ['note.progress.stepIndex', progress.stepIndex + 1]
-                    ]);
                 }
             }
         })

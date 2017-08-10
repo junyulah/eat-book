@@ -7,4 +7,6 @@ let {
 let EatBookView = require('../../src');
 let testData = require('./testData');
 
-mount(EatBookView(testData), document.body);
+mount(EatBookView({
+    note: testData
+}), document.body);

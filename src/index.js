@@ -35,13 +35,13 @@ let ProcedureViewMap = {
 module.exports = view((data, {
     update
 }) => {
-    let type = data.progress.type;
+    let type = data.note.progress.type;
 
     let endProgressHandle = () => {
-        let nextProrgess = nextProcedureProgress(data.progress.type);
+        let nextProrgess = nextProcedureProgress(data.note.progress.type);
         if (nextProrgess) {
             // TODO
-            update('progress', nextProrgess);
+            update('note.progress', nextProrgess);
         } else {
             // finished
         }
@@ -57,13 +57,18 @@ module.exports = view((data, {
             index: PROCEDURES.findIndex((item) => item === type),
             onchange: (index) => {
                 let targetType = PROCEDURES[index];
-                update('progress', initProgressMap[targetType]);
+                update('note.progress', getInitProgressMap()[targetType]);
+
+                data.onchange && data.onchange(data.note);
             }
         }),
 
         ProcedureViewMap[type]({
-            note: data,
-            onEnd: endProgressHandle
+            note: data.note,
+            onEnd: endProgressHandle,
+            onchange: () => {
+                data.onchange && data.onchange(data.note);
+            }
         })
     ]);
 });
@@ -74,28 +79,30 @@ let nextProcedureProgress = (from) => {
     let index = PROCEDURES.findIndex((item) => item === from);
     if (index < PROCEDURES.length - 1) {
         let targetType = PROCEDURES[index + 1];
-        return initProgressMap[targetType];
+        return getInitProgressMap()[targetType];
     }
 };
 
-let initProgressMap = {
-    preface: {
-        type: 'preface',
-        stepIndex: 0
-    },
-    sections: {
-        type: 'sections'
-    },
-    concepts: {
-        type: 'concepts'
-    },
-    conclusions: {
-        type: 'conclusions'
-    },
-    proofs: {
-        type: 'proofs'
-    },
-    applications: {
-        type: 'applications'
-    }
+let getInitProgressMap = () => {
+    return {
+        preface: {
+            type: 'preface',
+            stepIndex: 0
+        },
+        sections: {
+            type: 'sections'
+        },
+        concepts: {
+            type: 'concepts'
+        },
+        conclusions: {
+            type: 'conclusions'
+        },
+        proofs: {
+            type: 'proofs'
+        },
+        applications: {
+            type: 'applications'
+        }
+    };
 };

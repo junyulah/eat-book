@@ -4,7 +4,9 @@ module.exports = {
         //type: 'conclusions'
         //type: 'sections'
     },
-    preface: {},
+    preface: {
+        'book-name': 'test-book'
+    },
     sections: {
         text: '#a\n##b\n##c\n#d'
     },
