@@ -30,7 +30,22 @@ module.exports = view(({
         ]);
     };
 
-    let keyValueListView = KeyValueListView();
+    let keyValueListView = KeyValueListView({
+        valueRender: (value) => {
+            let content = value[0].value;
+            let proof = value[1].value;
+            return [
+                n('li', 'conclusion'),
+                n('div', content),
+                n('li', 'proof'),
+                n('div', {
+                    style: {
+                        fontStyle: 'italic'
+                    }
+                }, proof)
+            ];
+        }
+    });
 
     note.proofs.text = completeProofs(note.conclusions.text, note.proofs.text);
 
@@ -132,5 +147,7 @@ let completeProofs = (conclusionText, proofText) => {
         }
     }
 
-    return objectTreeToText(proofTextList);
+    return objectTreeToText(proofTextList, {
+        delimiter: '-'
+    });
 };

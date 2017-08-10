@@ -15,6 +15,6 @@ module.exports = {
         text: '- con1\neju!\n- con2\nmake'
     },
     proofs: {
-        text: ''
+        text: '- new\n--content\nsomething\n--proof\nwhat!'
     }
 };

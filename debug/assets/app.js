@@ -2351,6 +2351,8 @@ let {
     n
 } = __webpack_require__(0);
 
+let Crumbs = __webpack_require__(47);
+
 let PrefaceView = __webpack_require__(29);
 let SectionsView = __webpack_require__(33);
 let ConceptView = __webpack_require__(39);
@@ -2387,7 +2389,14 @@ module.exports = view((data, {
             height: '100%'
         }
     }, [
-        n('div', type),
+        Crumbs({
+            list: PROCEDURES,
+            index: PROCEDURES.findIndex((item) => item === type),
+            onchange: (index) => {
+                let targetType = PROCEDURES[index];
+                update('progress', initProgressMap[targetType]);
+            }
+        }),
 
         ProcedureViewMap[type]({
             note: data,
@@ -2402,33 +2411,29 @@ let nextProcedureProgress = (from) => {
     let index = PROCEDURES.findIndex((item) => item === from);
     if (index < PROCEDURES.length - 1) {
         let targetType = PROCEDURES[index + 1];
-        switch (targetType) {
-            case 'preface':
-                return {
-                    type: 'preface',
-                    stepIndex: 0
-                };
-            case 'sections':
-                return {
-                    type: 'sections'
-                };
-            case 'concepts':
-                return {
-                    type: 'concepts'
-                };
-            case 'conclusions':
-                return {
-                    type: 'conclusions'
-                };
-            case 'proofs':
-                return {
-                    type: 'proofs'
-                };
-            case 'applications':
-                return {
-                    type: 'applications'
-                };
-        }
+        return initProgressMap[targetType];
+    }
+};
+
+let initProgressMap = {
+    preface: {
+        type: 'preface',
+        stepIndex: 0
+    },
+    sections: {
+        type: 'sections'
+    },
+    concepts: {
+        type: 'concepts'
+    },
+    conclusions: {
+        type: 'conclusions'
+    },
+    proofs: {
+        type: 'proofs'
+    },
+    applications: {
+        type: 'applications'
     }
 };
 
@@ -3178,7 +3183,22 @@ module.exports = view(({
         ]);
     };
 
-    let keyValueListView = KeyValueListView();
+    let keyValueListView = KeyValueListView({
+        valueRender: (value) => {
+            let content = value[0].value;
+            let proof = value[1].value;
+            return [
+                n('li', 'conclusion'),
+                n('div', content),
+                n('li', 'proof'),
+                n('div', {
+                    style: {
+                        fontStyle: 'italic'
+                    }
+                }, proof)
+            ];
+        }
+    });
 
     note.proofs.text = completeProofs(note.conclusions.text, note.proofs.text);
 
@@ -3280,7 +3300,9 @@ let completeProofs = (conclusionText, proofText) => {
         }
     }
 
-    return objectTreeToText(proofTextList);
+    return objectTreeToText(proofTextList, {
+        delimiter: '-'
+    });
 };
 
 
@@ -3322,7 +3344,7 @@ module.exports = {
         text: '- con1\neju!\n- con2\nmake'
     },
     proofs: {
-        text: ''
+        text: '- new\n--content\nsomething\n--proof\nwhat!'
     }
 };
 
@@ -3404,7 +3426,8 @@ let {
 
 module.exports = view(({
     list = [],
-    errMsg
+    errMsg,
+    valueRender = id
 }) => {
     return n('div', {
         style: {
@@ -3428,11 +3451,13 @@ module.exports = view(({
                         marginLeft: 10,
                         wordWrap: 'break-word'
                     }
-                }, value)
+                }, valueRender(value))
             ]);
         }))
     ]);
 });
+
+let id = v => v;
 
 
 /***/ }),
@@ -3529,6 +3554,47 @@ module.exports = {
     objectTreeToMap,
     objectTreeToText
 };
+
+
+/***/ }),
+/* 47 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    view,
+    n
+} = __webpack_require__(0);
+
+module.exports = view(({
+    list = [],
+    index,
+    onchange
+}) => {
+    if (index === undefined || index === null) {
+        index = list.length - 1;
+    }
+
+    return n('div', list.map((item, i) => {
+        let itemStyle = {
+            margin: '0 8'
+        };
+        if (i === index) {
+            itemStyle.color = 'rgb(0,161,241)';
+        }
+        return [
+            n('a', {
+                style: itemStyle,
+                onclick: () => {
+                    onchange && onchange(i);
+                }
+            }, item),
+            i < list.length - 1 && n('span', '>')
+        ];
+    }));
+});
 
 
 /***/ })

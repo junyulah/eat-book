@@ -14,6 +14,8 @@ let {
     n
 } = require('kabanery');
 
+let Crumbs = require('./view/crumbs');
+
 let PrefaceView = require('./procedureView/prefaceView');
 let SectionsView = require('./procedureView/sectionsView');
 let ConceptView = require('./procedureView/conceptsView');
@@ -50,7 +52,14 @@ module.exports = view((data, {
             height: '100%'
         }
     }, [
-        n('div', type),
+        Crumbs({
+            list: PROCEDURES,
+            index: PROCEDURES.findIndex((item) => item === type),
+            onchange: (index) => {
+                let targetType = PROCEDURES[index];
+                update('progress', initProgressMap[targetType]);
+            }
+        }),
 
         ProcedureViewMap[type]({
             note: data,
@@ -65,32 +74,28 @@ let nextProcedureProgress = (from) => {
     let index = PROCEDURES.findIndex((item) => item === from);
     if (index < PROCEDURES.length - 1) {
         let targetType = PROCEDURES[index + 1];
-        switch (targetType) {
-            case 'preface':
-                return {
-                    type: 'preface',
-                    stepIndex: 0
-                };
-            case 'sections':
-                return {
-                    type: 'sections'
-                };
-            case 'concepts':
-                return {
-                    type: 'concepts'
-                };
-            case 'conclusions':
-                return {
-                    type: 'conclusions'
-                };
-            case 'proofs':
-                return {
-                    type: 'proofs'
-                };
-            case 'applications':
-                return {
-                    type: 'applications'
-                };
-        }
+        return initProgressMap[targetType];
+    }
+};
+
+let initProgressMap = {
+    preface: {
+        type: 'preface',
+        stepIndex: 0
+    },
+    sections: {
+        type: 'sections'
+    },
+    concepts: {
+        type: 'concepts'
+    },
+    conclusions: {
+        type: 'conclusions'
+    },
+    proofs: {
+        type: 'proofs'
+    },
+    applications: {
+        type: 'applications'
     }
 };

@@ -7,7 +7,8 @@ let {
 
 module.exports = view(({
     list = [],
-    errMsg
+    errMsg,
+    valueRender = id
 }) => {
     return n('div', {
         style: {
@@ -31,8 +32,10 @@ module.exports = view(({
                         marginLeft: 10,
                         wordWrap: 'break-word'
                     }
-                }, value)
+                }, valueRender(value))
             ]);
         }))
     ]);
 });
+
+let id = v => v;
