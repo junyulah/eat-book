@@ -42,6 +42,7 @@ module.exports = view((data, {
         if (nextProrgess) {
             // TODO
             update('note.progress', nextProrgess);
+            data.onchange && data.onchange(data.note);
         } else {
             // finished
         }

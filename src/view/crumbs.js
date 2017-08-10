@@ -19,7 +19,7 @@ module.exports = view(({
             margin: '0 8'
         };
         if (i === index) {
-            itemStyle.color = 'rgb(0,161,241)';
+            itemStyle.color = 'purple';
         }
         return [
             n('a', {

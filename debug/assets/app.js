@@ -1429,7 +1429,10 @@ let EatBookView = __webpack_require__(32);
 let testData = __webpack_require__(47);
 
 mount(EatBookView({
-    note: testData
+    note: testData,
+    onchange: (note) => {
+        console.log(JSON.stringify(note, null, 4));
+    }
 }), document.body);
 
 
@@ -2723,6 +2726,7 @@ module.exports = view((data, {
         if (nextProrgess) {
             // TODO
             update('note.progress', nextProrgess);
+            data.onchange && data.onchange(data.note);
         } else {
             // finished
         }
@@ -2815,7 +2819,7 @@ module.exports = view(({
             margin: '0 8'
         };
         if (i === index) {
-            itemStyle.color = 'rgb(0,161,241)';
+            itemStyle.color = 'purple';
         }
         return [
             n('a', {
@@ -2862,11 +2866,12 @@ module.exports = view((data, {
                     [`note.preface.${prefaceTitle}`, text],
                     ['note.progress.stepIndex', progress.stepIndex + 1]
                 ]);
-                data.onchange && data.onchange(data.note);
 
                 if (progress.stepIndex === PREFACE_PROCEDURES.length) { // last one
                     data.onEnd && data.onEnd();
                 }
+
+                data.onchange && data.onchange(data.note);
             }
         })
     ]);

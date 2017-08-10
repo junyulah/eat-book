@@ -25,11 +25,12 @@ module.exports = view((data, {
                     [`note.preface.${prefaceTitle}`, text],
                     ['note.progress.stepIndex', progress.stepIndex + 1]
                 ]);
-                data.onchange && data.onchange(data.note);
 
                 if (progress.stepIndex === PREFACE_PROCEDURES.length) { // last one
                     data.onEnd && data.onEnd();
                 }
+
+                data.onchange && data.onchange(data.note);
             }
         })
     ]);

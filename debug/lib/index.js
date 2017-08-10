@@ -8,5 +8,8 @@ let EatBookView = require('../../src');
 let testData = require('./testData');
 
 mount(EatBookView({
-    note: testData
+    note: testData,
+    onchange: (note) => {
+        console.log(JSON.stringify(note, null, 4));
+    }
 }), document.body);
