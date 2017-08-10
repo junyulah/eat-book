@@ -3277,13 +3277,15 @@ let KeyValueListView = __webpack_require__(9);
 
 module.exports = view(({
     note,
-    onEnd
+    onEnd,
+    onchange
 }) => {
     let updateConceptList = (listData) => {
         keyValueListView.ctx.update([
             ['errMsg', listData.errMsg],
             ['list', listData.list]
         ]);
+        onchange && onchange(note);
     };
 
     let keyValueListView = KeyValueListView();
@@ -3351,13 +3353,15 @@ let KeyValueListView = __webpack_require__(9);
 
 module.exports = view(({
     note,
-    onEnd
+    onEnd,
+    onchange
 }) => {
     let updateConceptList = (listData) => {
         keyValueListView.ctx.update([
             ['errMsg', listData.errMsg],
             ['list', listData.list]
         ]);
+        onchange && onchange(note);
     };
 
     let keyValueListView = KeyValueListView();
@@ -3435,13 +3439,16 @@ const PROOF_TEXT_OPTIONS = {
 
 module.exports = view(({
     note,
-    onEnd
+    onEnd,
+    onchange
 }) => {
     let updateConceptList = (listData) => {
         keyValueListView.ctx.update([
             ['errMsg', listData.errMsg],
             ['list', listData.list]
         ]);
+
+        onchange && onchange(note);
     };
 
     let keyValueListView = KeyValueListView({

@@ -11,13 +11,15 @@ let KeyValueListView = require('../view/keyValueListView');
 
 module.exports = view(({
     note,
-    onEnd
+    onEnd,
+    onchange
 }) => {
     let updateConceptList = (listData) => {
         keyValueListView.ctx.update([
             ['errMsg', listData.errMsg],
             ['list', listData.list]
         ]);
+        onchange && onchange(note);
     };
 
     let keyValueListView = KeyValueListView();
