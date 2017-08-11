@@ -27,10 +27,11 @@ module.exports = view(({
                     }
                 }, key),
 
-                n('div', {
+                n('pre', {
                     style: {
                         marginLeft: 10,
-                        wordWrap: 'break-word'
+                        wordWrap: 'break-word',
+                        whiteSpace: 'pre-wrap'
                     }
                 }, valueRender(value))
             ]);

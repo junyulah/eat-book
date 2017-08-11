@@ -19,7 +19,7 @@ let plainTreeToObjectTree = (tree) => {
         if (item.children && item.children.length) {
             value = plainTreeToObjectTree(item);
         } else {
-            value = lines.join('').trim();
+            value = lines.join('\n').trim();
         }
 
         if (map[key] !== undefined) {

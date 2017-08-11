@@ -53,7 +53,8 @@ module.exports = view(({
                     borderRadius: 5,
                     padding: 8,
                     boxSizing: 'border-box',
-                    backgroundColor: 'white'
+                    backgroundColor: 'white',
+                    overflow: 'scroll'
                 }
             }, [
                 n('button', {
