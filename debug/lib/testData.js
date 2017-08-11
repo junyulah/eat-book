@@ -1,14 +1,14 @@
 module.exports = {
     progress: {
-        type: 'proofs'
+        //type: 'proofs'
         //type: 'conclusions'
-        //type: 'sections'
+        type: 'sections'
     },
     preface: {
         'book-name': 'test-book'
     },
     sections: {
-        text: '#a\n##b\n##c\n#d'
+        text: '#a\n##Probabilistic analysis and further uses of indicator random variables \n##c\n#d'
     },
     concepts: {
         text: '- a\nwhatewfhwiufheiufhweifuheiufhewiufheiwufheiufheiufheriufhewoiruhfeiufheiwu!\n- b\nmake'

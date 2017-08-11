@@ -1,6 +1,6 @@
 {
   "name": "eat-book",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "An approach to help you read a book.",
   "main": "index.js",
   "scripts": {

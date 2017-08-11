@@ -3117,8 +3117,11 @@ let {
 const CIRCLE_RADIUS = 10;
 const GRAPH_PADDING_X = 10;
 const GRAPH_PADDING_Y = 10;
-const widthGap = 120;
-const heightUnit = 50;
+const widthGap = 160;
+const heightUnit = 100;
+const HEIGHT_EXPAND = 100;
+
+const MAX_TEXT_NUM = 20;
 
 module.exports = view(({
     tree
@@ -3153,7 +3156,7 @@ module.exports = view(({
             x: 0,
             y: 0,
             width: width + CIRCLE_RADIUS * 2 + GRAPH_PADDING_X * 2,
-            height: height + CIRCLE_RADIUS * 2 + GRAPH_PADDING_Y * 2
+            height: height + CIRCLE_RADIUS * 2 + GRAPH_PADDING_Y * 2 + HEIGHT_EXPAND
         }, [
             treeView(tree)
         ])
@@ -3180,16 +3183,57 @@ let treeView = (tree) => {
 };
 
 let nodeView = (node) => {
+    let textX = node.x + CIRCLE_RADIUS * 2;
+    let textY = node.y + CIRCLE_RADIUS / 2;
+
     return [
         svgn('circle', {
             cx: node.x,
             cy: node.y,
             r: CIRCLE_RADIUS
         }), svgn('text', {
-            x: node.x + CIRCLE_RADIUS * 2,
-            y: node.y + CIRCLE_RADIUS / 2
-        }, node.data)
+            x: textX,
+            y: textY,
+            'font-size': '12px'
+        }, displayText(node.data, textX))
     ];
+};
+
+let displayText = (text, x) => {
+    text = text || '';
+    let lines = spanText(text, MAX_TEXT_NUM);
+    return lines.map((line) => {
+        return svgn(`tspan x=${x} dy=15`, line);
+    });
+};
+
+let spanText = (text, maxWordNumber) => {
+    let lines = [];
+
+    let curLine = '',
+        curCount = 0;
+    for (let i = 0; i < text.length; i++) {
+        let letter = text[i];
+        curLine += letter;
+        if (/[\u4E00-\u9FFF]/.test(letter)) {
+            curCount += 2;
+        } else {
+            curCount++;
+        }
+        if (curCount >= maxWordNumber) {
+            if (!/\s/.test(curLine[curLine.length - 1]) && text[i + 1] && !/\s/.test(text[i + 1])) {
+                curLine += '-';
+            }
+            lines.push(curLine);
+            curLine = '';
+            curCount = 0;
+        }
+    }
+    if (curLine) {
+        lines.push(curLine);
+    }
+
+    return lines;
 };
 
 
@@ -3602,15 +3646,15 @@ module.exports = view(() => {
 
 module.exports = {
     progress: {
-        type: 'proofs'
+        //type: 'proofs'
         //type: 'conclusions'
-        //type: 'sections'
+        type: 'sections'
     },
     preface: {
         'book-name': 'test-book'
     },
     sections: {
-        text: '#a\n##b\n##c\n#d'
+        text: '#a\n##Probabilistic analysis and further uses of indicator random variables \n##c\n#d'
     },
     concepts: {
         text: '- a\nwhatewfhwiufheiufhweifuheiufhewiufheiwufheiufheiufheriufhewoiruhfeiufheiwu!\n- b\nmake'
