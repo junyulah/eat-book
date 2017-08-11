@@ -80,7 +80,7 @@ let treeView = (tree) => {
 
 let nodeView = (node) => {
     let textX = node.x + CIRCLE_RADIUS * 2;
-    let textY = node.y + CIRCLE_RADIUS / 2;
+    let textY = node.y - CIRCLE_RADIUS;
 
     return [
         svgn('circle', {
@@ -120,6 +120,7 @@ let spanText = (text, maxWordNumber) => {
             if (!/\s/.test(curLine[curLine.length - 1]) && text[i + 1] && !/\s/.test(text[i + 1])) {
                 curLine += '-';
             }
+
             lines.push(curLine);
             curLine = '';
             curCount = 0;
